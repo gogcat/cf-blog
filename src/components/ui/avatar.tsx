@@ -59,6 +59,7 @@ export function Avatar({ src, name, size = 36, className = '' }: AvatarProps) {
 
   if (isExternal) {
     return (
+      // eslint-disable-next-line @next/next/no-img-element
       <img
         src={src}
         alt={name}

@@ -67,7 +67,7 @@ export default function AdminCommentsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ key, value }),
       })
-      const data = await res.json()
+      const data = await res.json() as { success: boolean }
       if (data.success) {
         setSettings(prev => ({ ...prev, [key]: value }))
       }
@@ -103,7 +103,7 @@ export default function AdminCommentsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'approved' }),
       })
-      const data = await res.json()
+      const data = await res.json() as { success: boolean }
       if (data.success) {
         setComments(prev => prev.map(c => c.id === id ? { ...c, status: 'approved' } : c))
       }
@@ -119,7 +119,7 @@ export default function AdminCommentsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: 'rejected' }),
       })
-      const data = await res.json()
+      const data = await res.json() as { success: boolean }
       if (data.success) {
         setComments(prev => prev.map(c => c.id === id ? { ...c, status: 'rejected' } : c))
       }
@@ -132,7 +132,7 @@ export default function AdminCommentsPage() {
     if (!confirm('确定要删除这条评论吗？')) return
     try {
       const res = await fetch(`/api/admin/comments/${id}`, { method: 'DELETE' })
-      const data = await res.json()
+      const data = await res.json() as { success: boolean }
       if (data.success) {
         setComments(prev => prev.filter(c => c.id !== id))
       }
