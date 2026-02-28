@@ -106,6 +106,10 @@ npx wrangler pages deploy out
 
 参考 `.env.example` 配置必要的环境变量。
 
+## 联系
+
+如有问题或建议，欢迎通过邮箱联系我们：i@lishiqi.cn
+
 ## License
 
-MIT
+MIT License - see [LICENSE](LICENSE) file for details.
