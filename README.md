@@ -76,7 +76,7 @@ pnpm dev
 pnpm build
 
 # 部署到 Cloudflare Pages
-npx wrangler pages deploy out
+Cloudflare 会自动执行 `pnpm build`，产物在 `out` 目录
 ```
 
 ## 默认管理员
@@ -91,7 +91,7 @@ npx wrangler pages deploy out
 
 ```
 ├── migrations/          # 数据库迁移
-├── public/              # 静态资源
+├── public/             # 静态资源
 ├── src/
 │   ├── app/            # Next.js App Router
 │   │   ├── (admin)/    # 后台管理
@@ -99,7 +99,7 @@ npx wrangler pages deploy out
 │   │   └── api/        # API 路由
 │   ├── components/     # 组件
 │   └── lib/           # 工具函数
-└── wrangler.toml       # Cloudflare 配置
+└── wrangler.toml       # Cloudflare 配置（部署时在 Cloudflare Dashboard 配置）
 ```
 
 ## 环境变量
