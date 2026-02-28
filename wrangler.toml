@@ -2,6 +2,10 @@ name = "blog"
 compatibility_date = "2024-01-01"
 pages_build_output_dir = "out"
 
+[vars]
+SITE_URL = "http://localhost:3000"
+SITE_NAME = "My Blog"
+
 [[d1_databases]]
 binding = "DB"
 database_name = "blog-db"
@@ -10,7 +14,3 @@ database_id = "your-database-id"
 [[r2_buckets]]
 binding = "R2"
 bucket_name = "blog-assets"
-
-[vars]
-SITE_URL = "http://localhost:3000"
-SITE_NAME = "My Blog"
