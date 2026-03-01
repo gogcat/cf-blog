@@ -134,11 +134,12 @@ CREATE TABLE IF NOT EXISTS settings (
 CREATE INDEX IF NOT EXISTS idx_settings_key ON settings(key);
 
 -- Default admin user (email: admin@example.com, password: admin123)
+-- Password is SHA-256 hashed: 240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9
 INSERT INTO users (id, email, password_hash, name, role, created_at, updated_at)
 VALUES (
     'admin-default-id',
     'admin@example.com',
-    '$2a$10$F5ERxFdojaX8EyHbhZ92CuTp1eN0BqztFpIZptcpyzpYxpfz9l2yS',
+    '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9',
     'Administrator',
     'admin',
     CURRENT_TIMESTAMP,

@@ -1,13 +1,20 @@
-import bcrypt from 'bcryptjs'
-
 const SALT_ROUNDS = 10
 
 export async function hashPassword(password: string): Promise<string> {
-  return bcrypt.hash(password, SALT_ROUNDS)
+  const encoder = new TextEncoder()
+  const data = encoder.encode(password)
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data)
+  const hashArray = Array.from(new Uint8Array(hashBuffer))
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('')
+  console.log('Hashed password:', hashHex)
+  return hashHex
 }
 
 export async function verifyPassword(password: string, hash: string): Promise<boolean> {
-  return bcrypt.compare(password, hash)
+  const passwordHash = await hashPassword(password)
+  const result = passwordHash === hash
+  console.log('Password verification - input:', password, 'hash:', hash, 'computed:', passwordHash, 'match:', result)
+  return result
 }
 
 export function validatePasswordStrength(password: string): {

@@ -31,7 +31,11 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       })
 
+      console.log('Login response status:', res.status)
+      console.log('Login response ok:', res.ok)
+
       const data = await res.json() as LoginResponse
+      console.log('Login response data:', data)
 
       if (data.success) {
         router.push('/admin')
@@ -39,7 +43,8 @@ export default function LoginPage() {
       } else {
         setError(data.error || '登录失败')
       }
-    } catch {
+    } catch (err) {
+      console.error('Login error:', err)
       setError('登录失败，请稍后重试')
     } finally {
       setLoading(false)

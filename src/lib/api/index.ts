@@ -16,6 +16,20 @@ function getLocalDB() {
 }
 
 export function getEnv(): Env {
+  // Try to get Cloudflare environment from context first
+  const cloudflareContext = (globalThis as any)[Symbol.for('__cloudflare-context__')]
+  if (cloudflareContext?.env?.DB) {
+    return {
+      DB: cloudflareContext.env.DB as D1Database,
+      R2: cloudflareContext.env.R2 as R2Bucket,
+      JWT_SECRET: cloudflareContext.env.JWT_SECRET || '',
+      RESEND_API_KEY: cloudflareContext.env.RESEND_API_KEY || '',
+      SITE_URL: cloudflareContext.env.SITE_URL || 'http://localhost:3000',
+      SITE_NAME: cloudflareContext.env.SITE_NAME || 'My Blog',
+    }
+  }
+
+  // Fallback to local development
   if (isLocal) {
     const localDb = getLocalDB()
     if (localDb) {
@@ -29,7 +43,8 @@ export function getEnv(): Env {
       }
     }
   }
-  
+
+  // Fallback to process.env for compatibility
   return {
     DB: process.env.DB as unknown as D1Database,
     R2: process.env.R2 as unknown as R2Bucket,
