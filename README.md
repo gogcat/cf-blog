@@ -19,6 +19,7 @@
 - Cloudflare Workers (通过 OpenNext)
 - Cloudflare D1 (SQLite)
 - Cloudflare R2
+- Cloudflare KV (缓存)
 
 ## 快速开始
 
@@ -64,6 +65,12 @@ npx wrangler kv:namespace create CACHE
       "binding": "CACHE",
       "id": "your-kv-namespace-id"
     }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "R2",
+      "bucket_name": "blog-assets"
+    }
   ]
 }
 ```
@@ -86,18 +93,49 @@ pnpm dev
 
 访问 http://localhost:3000
 
-### 6. 部署
+### 6. 部署到 Cloudflare Workers
 
 ```bash
 # 构建并部署
-npx @opennextjs/cloudflare build
-npx @opennextjs/cloudflare deploy
+pnpm run build:workers
+npx wrangler deploy
 ```
 
 或者使用 npm script：
 
 ```bash
 pnpm deploy
+```
+
+### 7. 配置环境变量
+
+在 Cloudflare Dashboard 中配置环境变量：
+
+1. 进入 **Workers & Pages** → **Workers**
+2. 选择您的 Worker
+3. 点击 **Settings** → **Variables and Secrets**
+4. 添加以下环境变量：
+   - `JWT_SECRET` - JWT 密钥（必需）
+   - `SITE_URL` - 网站地址（必需）
+   - `SITE_NAME` - 网站名称（必需）
+   - `RESEND_API_KEY` - 邮件服务 API 密钥（可选）
+
+### 8. 配置自定义域名（可选）
+
+在 Cloudflare Dashboard 中：
+
+1. 进入 **Workers & Pages** → **Workers**
+2. 选择您的 Worker
+3. 点击 **Settings** → **Triggers**
+4. 在 **Custom Domains** 部分点击 **Add Custom Domain**
+5. 输入您的域名并按照提示配置 DNS
+
+## 默认管理员账号
+
+- 邮箱：`admin@example.com`
+- 密码：`admin123`
+
+**⚠️ 重要：首次登录后请立即修改密码！**
 ```
 
 ## 默认管理员
