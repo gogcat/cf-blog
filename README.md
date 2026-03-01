@@ -1,6 +1,20 @@
-# CF-blog
+# CF-blog （Cloudflare Blog）
 
-基于 Next.js 15 + Cloudflare Workers/D1/R2 搭建的博客系统。
+基于 Cloudflare 全家桶构建的现代化博客系统
+
+A modern, serverless blog system built entirely on Cloudflare’s ecosystem
+
+这是一个完全运行在 Cloudflare 生态上的开源博客程序，使用 Pages、Workers、D1 等服务实现，依托 Cloudflare 慷慨的免费额度即可稳定运行。
+没有复杂环境、无需服务器、低成本、高可用、全球极速访问。
+适合想零成本拥有独立博客，又不想折腾主机、运维的用户。
+
+A clean, full-featured blog platform powered by Cloudflare Pages, Workers, and D1 Database. Runs completely free on Cloudflare’s generous free tier, with global edge acceleration, zero server maintenance, and no hosting costs.
+
+## 亮点
+- 纯 Cloudflare 原生架构，免费额度就能跑满性能
+- 全球边缘节点加速，访问速度快、稳定性强
+- 无需数据库服务器、无需域名备案、无需运维
+- 界面简洁，文章管理方便，适合长期使用
 
 ## 功能特性
 
