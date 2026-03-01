@@ -95,9 +95,15 @@ pnpm dev
 
 ### 6. 部署到 Cloudflare Workers
 
+**⚠️ 重要：本项目是 Cloudflare Workers 项目，不是 Cloudflare Pages 项目！**
+
+#### 部署步骤：
+
 ```bash
-# 构建并部署
+# 1. 构建项目
 pnpm run build:workers
+
+# 2. 部署到 Cloudflare Workers
 npx wrangler deploy
 ```
 
@@ -106,6 +112,22 @@ npx wrangler deploy
 ```bash
 pnpm deploy
 ```
+
+#### 部署说明：
+
+- `build:workers` 命令会使用 OpenNext 构建 Next.js 应用
+- `npx wrangler deploy` 会将构建产物部署到 Cloudflare Workers
+- 部署成功后会显示 Worker URL，例如：`https://cf-blog.sticky-lee.workers.dev`
+- `wrangler.jsonc` 中的 D1、KV、R2 绑定会自动应用到 Worker
+
+#### 不要使用以下命令（错误）：
+
+```bash
+# ❌ 错误：不要使用 pages deploy
+npx wrangler pages deploy .open-next --project-name=cf-blog
+```
+
+这是 Cloudflare Pages 的部署命令，不适用于本项目！
 
 ### 7. 配置环境变量
 
