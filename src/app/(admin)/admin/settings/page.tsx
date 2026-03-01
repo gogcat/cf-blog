@@ -230,6 +230,7 @@ export default function AdminSettingsPage() {
             <div className="flex items-center gap-6">
               <div className="relative">
                 {profileForm.avatar_url ? (
+                  // eslint-disable-next-line @next/next/no-img-element
                   <img
                     src={profileForm.avatar_url}
                     alt="头像"
