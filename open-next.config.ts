@@ -23,6 +23,10 @@ const config: OpenNextConfig = {
       queue: 'dummy',
     },
   },
+  dangerous: {
+    disableIncrementalCache: true,
+    disableTagCache: true,
+  },
 }
 
 export default config

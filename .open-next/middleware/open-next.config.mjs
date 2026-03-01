@@ -21,6 +21,10 @@ var config = {
       tagCache: "dummy",
       queue: "dummy"
     }
+  },
+  dangerous: {
+    disableIncrementalCache: true,
+    disableTagCache: true
   }
 };
 var open_next_config_default = config;
