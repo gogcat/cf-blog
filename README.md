@@ -1,6 +1,6 @@
 # CF-blog
 
-基于 Next.js 14 + Cloudflare Pages/D1/R2 搭建的博客系统。
+基于 Next.js 15 + Cloudflare Workers/D1/R2 搭建的博客系统。
 
 ## 功能特性
 
@@ -13,20 +13,19 @@
 
 ## 技术栈
 
-- Next.js 14 (App Router)
+- Next.js 15 (App Router)
 - TypeScript
 - Tailwind CSS
-- Cloudflare Pages
+- Cloudflare Workers (通过 OpenNext)
 - Cloudflare D1 (SQLite)
 - Cloudflare R2
-- NextAuth.js (JWT)
 
 ## 快速开始
 
 ### 1. 克隆项目
 
 ```bash
-git clone https://github.com/your-username/cf-blog.git
+git clone https://github.com/gogcat/cf-blog.git
 cd cf-blog
 pnpm install
 ```
@@ -40,25 +39,43 @@ npx wrangler login
 # 创建 D1 数据库
 npx wrangler d1 create blog-db
 
-# 创建 R2 存储桶
+# 创建 R2 存储储桶
 npx wrangler r2 bucket create blog-assets
+
+# 创建 KV 命名空间（用于缓存）
+npx wrangler kv:namespace create CACHE
 ```
 
 ### 3. 更新配置
 
-编辑 `wrangler.toml`，替换 `database_id` 为实际值：
+编辑 `wrangler.jsonc`，替换相关 ID：
 
-```toml
-[[d1_databases]]
-binding = "DB"
-database_name = "blog-db"
-database_id = "your-database-id"
+```jsonc
+{
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "blog-db",
+      "database_id": "your-database-id"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "CACHE",
+      "id": "your-kv-namespace-id"
+    }
+  ]
+}
 ```
 
 ### 4. 初始化数据库
 
 ```bash
+# 本地
 npx wrangler d1 execute blog-db --local --file=migrations/001_initial_schema.sql
+
+# 生产环境
+npx wrangler d1 execute blog-db --remote --file=migrations/001_initial_schema.sql
 ```
 
 ### 5. 本地开发
@@ -72,11 +89,15 @@ pnpm dev
 ### 6. 部署
 
 ```bash
-# 构建
-pnpm build
+# 构建并部署
+npx @opennextjs/cloudflare build
+npx @opennextjs/cloudflare deploy
+```
 
-# 部署到 Cloudflare Pages
-Cloudflare 会自动执行 `pnpm build`，产物在 `out` 目录
+或者使用 npm script：
+
+```bash
+pnpm deploy
 ```
 
 ## 默认管理员
@@ -99,12 +120,15 @@ Cloudflare 会自动执行 `pnpm build`，产物在 `out` 目录
 │   │   └── api/        # API 路由
 │   ├── components/     # 组件
 │   └── lib/           # 工具函数
-└── wrangler.toml       # Cloudflare 配置（部署时在 Cloudflare Dashboard 配置）
+├── open-next.config.ts # OpenNext 配置
+└── wrangler.jsonc      # Cloudflare Workers 配置
 ```
 
 ## 环境变量
 
 参考 `.env.example` 配置必要的环境变量。
+
+在 Cloudflare Dashboard 中设置环境变量（Settings > Variables）。
 
 ## 联系
 

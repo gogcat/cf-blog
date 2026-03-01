@@ -1,0 +1,23 @@
+{
+  "name": "cf-blog",
+  "compatibility_date": "2026-03-01",
+  "main": ".open-next/worker.js",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "directory": ".open-next/assets",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "blog-db",
+      "database_id": "your-database-id"
+    }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "CACHE",
+      "id": "your-kv-namespace-id"
+    }
+  ]
+}

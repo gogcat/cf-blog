@@ -3,11 +3,6 @@ const nextConfig = {
   images: {
     unoptimized: true,
   },
-  experimental: {
-    serverActions: {
-      allowedOrigins: ['*.pages.dev'],
-    },
-  },
 }
 
 module.exports = nextConfig
