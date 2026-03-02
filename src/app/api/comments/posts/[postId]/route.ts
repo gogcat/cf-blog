@@ -73,7 +73,7 @@ function getGravatarUrl(email: string, size: number = 80): string {
 async function getCommentSettings(env: ReturnType<typeof getEnv>) {
   const results = await env.DB.prepare('SELECT key, value FROM settings').all<{ key: string; value: string }>()
   const settings: Record<string, string> = {}
-  results.results.forEach((row) => {
+  results.results.forEach((row: { key: string; value: string }) => {
     settings[row.key] = row.value || ''
   })
   return {
@@ -117,31 +117,27 @@ export async function GET(
       LIMIT ? OFFSET ?
     `).bind(postId, 'approved', limit, offset).all()
     
-    const comments: CommentWithUser[] = result.results.map((row) => {
-      const isGuest = !(row as { user_id: string }).user_id
-      const userName = isGuest 
-        ? (row as { guest_name: string }).guest_name 
-        : (row as { user_name: string }).user_name
-      const userAvatar = isGuest 
-        ? null 
-        : (row as { user_avatar: string }).user_avatar
-      const userEmail = isGuest ? (row as { guest_email: string }).guest_email : undefined
+    const comments: CommentWithUser[] = result.results.map((row: any) => {
+      const isGuest = !row.user_id
+      const userName = isGuest ? row.guest_name : row.user_name
+      const userAvatar = isGuest ? null : row.user_avatar
+      const userEmail = isGuest ? row.guest_email : undefined
       
       const avatarUrl = isGuest && userEmail 
         ? getGravatarUrl(userEmail)
         : userAvatar
       
       return {
-        id: (row as { id: string }).id,
-        content: (row as { content: string }).content,
-        post_id: (row as { post_id: string }).post_id,
-        user_id: (row as { user_id: string }).user_id,
-        parent_id: (row as { parent_id: string }).parent_id,
-        status: (row as { status: 'pending' | 'approved' | 'rejected' }).status,
-        created_at: (row as { created_at: string }).created_at,
-        updated_at: (row as { updated_at: string }).updated_at,
+        id: row.id,
+        content: row.content,
+        post_id: row.post_id,
+        user_id: row.user_id,
+        parent_id: row.parent_id,
+        status: row.status,
+        created_at: row.created_at,
+        updated_at: row.updated_at,
         user: {
-          id: isGuest ? `guest-${(row as { id: string }).id}` : (row as { user_id: string }).user_id,
+          id: isGuest ? `guest-${row.id}` : row.user_id,
           name: userName,
           avatar_url: avatarUrl,
           email: userEmail,

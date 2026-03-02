@@ -44,19 +44,19 @@ export async function GET(request: NextRequest): Promise<Response> {
         LIMIT ? OFFSET ?
       `).bind(...params, limit, offset).all()
 
-      const comments = result.results.map((row) => ({
-        id: (row as { id: string }).id,
-        content: (row as { content: string }).content,
-        status: (row as { status: 'pending' | 'approved' | 'rejected' }).status,
-        parent_id: (row as { parent_id: string | null }).parent_id,
-        post_id: (row as { post_id: string }).post_id,
-        user_id: (row as { user_id: string }).user_id,
-        created_at: (row as { created_at: string }).created_at,
-        updated_at: (row as { updated_at: string }).updated_at,
-        post_title: (row as { post_title: string | null }).post_title,
-        user_name: (row as { user_name: string | null }).user_name,
-        user_email: (row as { user_email: string | null }).user_email,
-        user_avatar: (row as { user_avatar: string | null }).user_avatar,
+      const comments = result.results.map((row: any) => ({
+        id: row.id,
+        content: row.content,
+        status: row.status,
+        parent_id: row.parent_id,
+        post_id: row.post_id,
+        user_id: row.user_id,
+        created_at: row.created_at,
+        updated_at: row.updated_at,
+        post_title: row.post_title,
+        user_name: row.user_name,
+        user_email: row.user_email,
+        user_avatar: row.user_avatar,
       }))
 
       return successResponse({

@@ -28,6 +28,8 @@
   ],
   "vars": {
     "SITE_URL": "https://cf-blog.huoli.fun",
-    "SITE_NAME": "My Blog"
+    "SITE_NAME": "My Blog",
+    "JWT_SECRET": "928f3ae321c7e35a58722ed07de8f758b7a35e318df4ee7109c0f5f35a58c6c2",
+    "RESEND_API_KEY": ""
   }
 }

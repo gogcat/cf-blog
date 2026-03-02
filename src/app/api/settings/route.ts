@@ -16,7 +16,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     
     return NextResponse.json({
       success: true,
-      data: { settings: settingsMap },
+      data: settingsMap,
     })
   } catch (error) {
     console.error('Get public settings error:', error)

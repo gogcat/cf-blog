@@ -32,16 +32,16 @@ export async function GET(request: NextRequest): Promise<Response> {
         LIMIT ? OFFSET ?
       `).bind(limit, offset).all()
 
-      const users = result.results.map((row) => ({
-        id: (row as { id: string }).id,
-        email: (row as { email: string }).email,
-        name: (row as { name: string }).name,
-        avatar_url: (row as { avatar_url: string | null }).avatar_url,
-        role: (row as { role: 'user' | 'author' | 'admin' }).role,
-        oauth_providers: (row as { oauth_providers: string | null }).oauth_providers,
-        email_verified_at: (row as { email_verified_at: string | null }).email_verified_at,
-        created_at: (row as { created_at: string }).created_at,
-        updated_at: (row as { updated_at: string }).updated_at,
+      const users = result.results.map((row: any) => ({
+        id: row.id,
+        email: row.email,
+        name: row.name,
+        avatar_url: row.avatar_url,
+        role: row.role,
+        oauth_providers: row.oauth_providers,
+        email_verified_at: row.email_verified_at,
+        created_at: row.created_at,
+        updated_at: row.updated_at,
       }))
 
       return successResponse({

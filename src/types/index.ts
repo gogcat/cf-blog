@@ -1,25 +1,3 @@
-export interface Env {
-  DB: D1Database
-  R2: R2Bucket
-  JWT_SECRET: string
-  RESEND_API_KEY: string
-  SITE_URL: string
-  SITE_NAME: string
-}
-
-export interface User {
-  id: string
-  email: string
-  password_hash?: string
-  name: string
-  avatar_url: string | null
-  role: 'user' | 'author' | 'admin'
-  oauth_providers?: string
-  email_verified_at: string | null
-  created_at: string
-  updated_at: string
-}
-
 export interface Post {
   id: string
   title: string
@@ -29,20 +7,23 @@ export interface Post {
   cover_image: string | null
   author_id: string
   category_id: string | null
-  status: 'draft' | 'published' | 'archived'
+  status: string
   view_count: number
-  published_at: string | null
+  published_at: string
   created_at: string
   updated_at: string
   deleted_at: string | null
+  author?: { id: string; name: string; avatar_url: string | null }
+  category?: { id: string; name: string; slug: string } | null
+  tags?: { id: string; name: string; slug: string }[]
 }
 
 export interface Category {
   id: string
   name: string
   slug: string
-  description: string | null
-  sort_order: number
+  description?: string
+  sort_order?: number
   created_at: string
   updated_at: string
 }
@@ -55,45 +36,48 @@ export interface Tag {
   updated_at: string
 }
 
-export interface PostTag {
-  post_id: string
-  tag_id: string
+export interface CategoryGroup {
+  name: string
+  slug: string
+  posts: Post[]
 }
 
 export interface Comment {
   id: string
-  content: string
   post_id: string
-  user_id: string
+  author_id: string | null
+  user_id: string | null
+  guest_name: string | null
+  guest_email: string | null
+  content: string
   parent_id: string | null
-  status: 'pending' | 'approved' | 'rejected'
+  status: string
   created_at: string
   updated_at: string
   deleted_at: string | null
+  author?: { id: string; name: string; avatar_url: string | null }
+  replies?: Comment[]
+}
+
+export interface User {
+  id: string
+  name: string
+  email: string
+  avatar_url: string | null
+  role: string
+  password_hash?: string
+  email_verified_at?: string | null
+  oauth_providers?: string
+  created_at: string
+  updated_at: string
 }
 
 export interface Session {
   id: string
   user_id: string
   refresh_token: string
-  user_agent: string | null
-  ip_address: string | null
-  expires_at: string
-  created_at: string
-}
-
-export interface PasswordReset {
-  id: string
-  email: string
-  token: string
-  expires_at: string
-  created_at: string
-}
-
-export interface EmailVerification {
-  id: string
-  email: string
-  token: string
+  user_agent?: string
+  ip_address?: string
   expires_at: string
   created_at: string
 }
@@ -106,20 +90,38 @@ export interface ApiResponse<T = unknown> {
   details?: Record<string, string[]>
 }
 
-export interface PaginatedResponse<T> {
-  items: T[]
-  pagination: {
-    page: number
-    limit: number
-    total: number
-    total_pages: number
-  }
-}
-
 export interface JWTPayload {
   sub: string
   email: string
   role: string
-  iat: number
-  exp: number
+  iat?: number
+  exp?: number
+}
+
+export interface PasswordReset {
+  id: string
+  user_id: string
+  email: string
+  token: string
+  expires_at: string
+  created_at: string
+}
+
+export interface EmailVerification {
+  id: string
+  user_id: string
+  email: string
+  token: string
+  expires_at: string
+  created_at: string
+}
+
+export interface Env {
+  DB: D1Database
+  R2: R2Bucket
+  JWT_SECRET: string
+  RESEND_API_KEY?: string
+  SITE_URL: string
+  SITE_NAME: string
+  request?: Request
 }

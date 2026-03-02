@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
     const results = await env.DB.prepare('SELECT key, value FROM settings').all<{ key: string; value: string }>()
     
     const settings: Record<string, string> = {}
-    results.results.forEach((row) => {
+    results.results.forEach((row: { key: string; value: string }) => {
       settings[row.key] = row.value || ''
     })
     

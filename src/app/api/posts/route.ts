@@ -116,7 +116,6 @@ export async function GET(request: NextRequest): Promise<Response> {
           id: (row as { category_id: string }).category_id,
           name: (row as { category_name: string }).category_name,
           slug: (row as { category_slug: string }).category_slug,
-          description: null,
           sort_order: 0,
           created_at: '',
           updated_at: '',
