@@ -14,7 +14,8 @@ interface User {
 }
 
 interface SiteSettings {
-  site_name: string
+  site_title: string
+  site_subtitle: string
   site_description: string
   site_copyright: string
 }
@@ -54,7 +55,8 @@ export default function FrontendLayout({
         const data = await res.json() as { success: boolean; data: { settings: SiteSettings } }
         if (data.success && data.data?.settings) {
           setSiteSettings({
-            site_name: data.data.settings.site_name || 'My Blog',
+            site_title: data.data.settings.site_title || '我的博客',
+            site_subtitle: data.data.settings.site_subtitle || '分享技术，记录生活',
             site_description: data.data.settings.site_description || '',
             site_copyright: data.data.settings.site_copyright || '',
           })
@@ -80,8 +82,8 @@ export default function FrontendLayout({
     }
   }
 
-  const displayName = siteSettings?.site_name || 'My Blog'
-  const displayCopyright = siteSettings?.site_copyright || `© ${new Date().getFullYear()} My Blog. All rights reserved.`
+  const displayName = siteSettings?.site_title || '我的博客'
+  const displayCopyright = siteSettings?.site_copyright || `© ${new Date().getFullYear()} 我的博客. All rights reserved.`
 
   return (
     <div className="min-h-screen flex flex-col">
