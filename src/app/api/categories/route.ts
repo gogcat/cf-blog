@@ -6,7 +6,7 @@ import type { User, Category } from '@/types'
 
 const createCategorySchema = z.object({
   name: z.string().min(1).max(100),
-  slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/).optional(),
+  slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/).optional().or(z.literal('')),
   description: z.string().max(500).optional(),
   sort_order: z.number().int().optional(),
 })

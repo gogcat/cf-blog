@@ -230,12 +230,12 @@ export default function AdminTagsPage() {
               </div>
               
               <div>
-                <Label htmlFor="slug">Slug</Label>
+                <Label htmlFor="slug">Slug（可选）</Label>
                 <Input
                   id="slug"
                   value={formData.slug}
                   onChange={e => setFormData({ ...formData, slug: e.target.value })}
-                  placeholder="留空则自动生成"
+                  placeholder="留空则根据名称自动生成"
                   className="mt-1"
                 />
               </div>

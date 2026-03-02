@@ -6,7 +6,7 @@ import type { User, Tag } from '@/types'
 
 const createTagSchema = z.object({
   name: z.string().min(1).max(50),
-  slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/).optional(),
+  slug: z.string().min(1).max(100).regex(/^[a-z0-9-]+$/).optional().or(z.literal('')),
 })
 
 export async function GET(): Promise<Response> {
