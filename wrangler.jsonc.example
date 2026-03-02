@@ -25,5 +25,9 @@
       "binding": "R2",
       "bucket_name": "r2-cf"
     }
-  ]
+  ],
+  "vars": {
+    "SITE_URL": "https://your-domain.com",
+    "SITE_NAME": "My Blog"
+  }
 }

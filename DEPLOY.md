@@ -86,15 +86,26 @@ cp wrangler.jsonc.example wrangler.jsonc
       "binding": "R2",
       "bucket_name": "blog-assets"  ← 替换为你的 R2 存储桶名称
     }
-  ]
+  ],
+  "vars": {
+    "SITE_URL": "https://your-domain.com",  ← 替换为你的网站地址
+    "SITE_NAME": "My Blog"  ← 替换为你的网站名称
+  }
 }
 ```
 
-**⚠️ 重要：这些资源绑定 ID 必须修改！**
+**⚠️ 重要：这些配置必须修改！**
 
 - `database_id` - 必须替换为你的 D1 数据库 ID
 - `id` (KV namespace) - 必须替换为你的 KV 命名空间 ID
 - `bucket_name` - 可以自定义，但必须在 Cloudflare 中创建对应的 R2 存储桶
+- `SITE_URL` - 必须替换为你的网站地址（如 `https://your-domain.com`）
+- `SITE_NAME` - 可以自定义你的网站名称
+
+**💡 说明**：
+- `vars` 部分定义了环境变量
+- 部署时，这些变量会自动应用到 Worker
+- 避免了每次部署后环境变量被清除的问题
 
 ### 5. 初始化数据库
 
@@ -106,24 +117,7 @@ npx wrangler d1 execute blog-db --local --file=migrations/001_initial_schema.sql
 npx wrangler d1 execute blog-db --remote --file=migrations/001_initial_schema.sql
 ```
 
-### 6. 配置环境变量
-
-在 Cloudflare Dashboard 中配置环境变量：
-
-1. 进入 **Workers & Pages** → **Workers**
-2. 选择您的 Worker
-3. 点击 **Settings** → **Variables and Secrets**
-4. 添加以下环境变量：
-   - `JWT_SECRET` - JWT 密钥（必需）
-   - `SITE_URL` - 网站地址（必需）
-   - `SITE_NAME` - 网站名称（必需）
-   - `RESEND_API_KEY` - 邮件服务 API 密钥（可选）
-
-**⚠️ 重要：环境变量不在 `wrangler.jsonc` 中设置，而是在 Cloudflare Dashboard 中配置！**
-
-**原因**：`wrangler.jsonc` 中的 `vars` 会覆盖 Dashboard 中的环境变量设置，导致无法灵活修改。
-
-### 7. 本地开发
+### 6. 本地开发
 
 ```bash
 pnpm dev
@@ -131,13 +125,13 @@ pnpm dev
 
 访问 http://localhost:3000
 
-### 8. 构建项目
+### 7. 构建项目
 
 ```bash
 pnpm run build:workers
 ```
 
-### 9. 部署到 Cloudflare Workers
+### 8. 部署到 Cloudflare Workers
 
 ```bash
 npx wrangler deploy
@@ -154,6 +148,7 @@ pnpm deploy
 - `npx wrangler deploy` 会将构建产物部署到 Cloudflare Workers
 - 部署成功后会显示 Worker URL，例如：`https://cf-blog.sticky-lee.workers.dev`
 - `wrangler.jsonc` 中的 D1、KV、R2 绑定会自动应用到 Worker
+- `wrangler.jsonc` 中的 `vars` 环境变量会自动应用到 Worker
 
 ---
 
