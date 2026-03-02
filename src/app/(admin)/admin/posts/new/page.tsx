@@ -47,6 +47,9 @@ export default function NewPostPage() {
 
   const [uploading, setUploading] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const editorRef = useRef<any>(null)
+  const coverFileInputRef = useRef<HTMLInputElement>(null)
+  const [coverUploading, setCoverUploading] = useState(false)
 
   useEffect(() => {
     Promise.all([
@@ -89,7 +92,25 @@ export default function NewPostPage() {
       const data = await res.json() as { success: boolean; data?: { url: string }; error?: string }
 
       if (data.success && data.data?.url) {
-        setCoverImage(data.data.url)
+        const imageMarkdown = `![${file.name}](${data.data.url})`
+        
+        if (editorRef.current?.insertText) {
+          editorRef.current.insertText(imageMarkdown)
+        } else if (editorRef.current?.textarea) {
+          const textarea = editorRef.current.textarea
+          const start = textarea.selectionStart
+          const end = textarea.selectionEnd
+          const text = textarea.value
+          
+          const newText = text.substring(0, start) + imageMarkdown + text.substring(end)
+          setContent(newText)
+          
+          setTimeout(() => {
+            textarea.selectionStart = textarea.selectionEnd = start + imageMarkdown.length
+          }, 0)
+        } else {
+          setContent(prev => prev + '\n' + imageMarkdown)
+        }
       } else {
         setError(data.error || '上传图片失败')
       }
@@ -99,6 +120,43 @@ export default function NewPostPage() {
       setUploading(false)
       if (fileInputRef.current) {
         fileInputRef.current.value = ''
+      }
+    }
+  }
+
+  const handleCoverImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setCoverUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const token = document.cookie
+        .split('; ')
+        .find(row => row.startsWith('access_token='))
+        ?.split('=')[1]
+
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+        body: formData
+      })
+
+      const data = await res.json() as { success: boolean; data?: { url: string }; error?: string }
+
+      if (data.success && data.data?.url) {
+        setCoverImage(data.data.url)
+      } else {
+        setError(data.error || '上传图片失败')
+      }
+    } catch {
+      setError('上传图片失败')
+    } finally {
+      setCoverUploading(false)
+      if (coverFileInputRef.current) {
+        coverFileInputRef.current.value = ''
       }
     }
   }
@@ -263,6 +321,7 @@ export default function NewPostPage() {
                     </div>
                     <div data-color-mode="light">
                       <MDEditor
+                        ref={editorRef}
                         value={content}
                         onChange={(val) => setContent(val || '')}
                         height={500}
@@ -284,13 +343,33 @@ export default function NewPostPage() {
                 <div className="space-y-4">
                   <div>
                     <Label htmlFor="coverImage">封面图 URL</Label>
-                    <Input
-                      id="coverImage"
-                      value={coverImage}
-                      onChange={e => setCoverImage(e.target.value)}
-                      placeholder="输入封面图 URL"
-                      className="mt-1"
-                    />
+                    <div className="flex items-center gap-2">
+                      <Input
+                        id="coverImage"
+                        value={coverImage}
+                        onChange={e => setCoverImage(e.target.value)}
+                        placeholder="输入封面图 URL 或点击上传"
+                        className="flex-1 min-w-0"
+                      />
+                      <input
+                        type="file"
+                        ref={coverFileInputRef}
+                        onChange={handleCoverImageUpload}
+                        accept="image/jpeg,image/png,image/gif,image/webp"
+                        className="hidden"
+                        id="cover-image-upload"
+                      />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => coverFileInputRef.current?.click()}
+                        disabled={coverUploading}
+                        className="whitespace-nowrap"
+                      >
+                        {coverUploading ? '上传中...' : '+ 上传'}
+                      </Button>
+                    </div>
                   </div>
 
                   <div>
