@@ -1,4 +1,4 @@
-# Cloudflare Workers 部署指南
+# cf-blog 部署指南
 
 **⚠️ 重要：本项目必须使用本地 wrangler 部署，不支持 Cloudflare Dashboard 的 GitHub 集成！**
 
