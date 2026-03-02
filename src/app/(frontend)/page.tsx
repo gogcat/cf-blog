@@ -70,13 +70,15 @@ export default function HomePage() {
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   const [error, setError] = useState('')
-  const [siteSettings, setSiteSettings] = useState({
-    site_title: '我的博客',
-    site_subtitle: '分享技术，记录生活',
-  })
+  const [siteSettings, setSiteSettings] = useState<{
+    site_title: string
+    site_subtitle: string
+  } | null>(null)
+  const [settingsLoading, setSettingsLoading] = useState(true)
   const loaderRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
+    setSettingsLoading(true)
     fetch('/api/settings')
       .then<{ success: boolean; data?: { settings?: Record<string, string> } }>(res => res.json())
       .then(data => {
@@ -88,6 +90,9 @@ export default function HomePage() {
         }
       })
       .catch(() => {})
+      .finally(() => {
+        setSettingsLoading(false)
+      })
   }, [])
 
   const fetchPosts = useCallback(async (pageNum: number, isLoadMore: boolean = false) => {
@@ -155,8 +160,17 @@ export default function HomePage() {
         <div className="bg-white border-b border-gray-200">
           <Container>
             <div className="py-16 text-center">
-              <h1 className="text-4xl font-bold text-gray-900 mb-4">{siteSettings.site_title}</h1>
-              <p className="text-gray-600">{siteSettings.site_subtitle}</p>
+              {settingsLoading ? (
+                <div className="animate-pulse">
+                  <div className="h-10 bg-gray-200 rounded w-64 mx-auto mb-4"></div>
+                  <div className="h-6 bg-gray-200 rounded w-96 mx-auto"></div>
+                </div>
+              ) : (
+                <>
+                  <h1 className="text-4xl font-bold text-gray-900 mb-4">{siteSettings?.site_title}</h1>
+                  <p className="text-gray-600">{siteSettings?.site_subtitle}</p>
+                </>
+              )}
             </div>
           </Container>
         </div>
@@ -177,8 +191,17 @@ export default function HomePage() {
       <div className="bg-white border-b border-gray-200">
         <Container>
           <div className="py-16 text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">{siteSettings.site_title}</h1>
-            <p className="text-gray-600">{siteSettings.site_subtitle}</p>
+            {settingsLoading ? (
+              <div className="animate-pulse">
+                <div className="h-10 bg-gray-200 rounded w-64 mx-auto mb-4"></div>
+                <div className="h-6 bg-gray-200 rounded w-96 mx-auto"></div>
+              </div>
+            ) : (
+              <>
+                <h1 className="text-4xl font-bold text-gray-900 mb-4">{siteSettings?.site_title}</h1>
+                <p className="text-gray-600">{siteSettings?.site_subtitle}</p>
+              </>
+            )}
           </div>
         </Container>
       </div>

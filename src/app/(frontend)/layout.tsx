@@ -27,11 +27,8 @@ export default function FrontendLayout({
   const pathname = usePathname()
   const [user, setUser] = useState<User | null>(null)
   const [loading, setLoading] = useState(true)
-  const [siteSettings, setSiteSettings] = useState<SiteSettings>({
-    site_name: 'My Blog',
-    site_description: '',
-    site_copyright: '',
-  })
+  const [siteSettings, setSiteSettings] = useState<SiteSettings | null>(null)
+  const [settingsLoading, setSettingsLoading] = useState(true)
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -51,6 +48,7 @@ export default function FrontendLayout({
     }
 
     const fetchSettings = async () => {
+      setSettingsLoading(true)
       try {
         const res = await fetch('/api/settings')
         const data = await res.json() as { success: boolean; data: { settings: SiteSettings } }
@@ -63,6 +61,8 @@ export default function FrontendLayout({
         }
       } catch (error) {
         console.error('Failed to fetch settings:', error)
+      } finally {
+        setSettingsLoading(false)
       }
     }
 
@@ -80,17 +80,21 @@ export default function FrontendLayout({
     }
   }
 
-  const displayName = siteSettings.site_name || 'My Blog'
-  const displayCopyright = siteSettings.site_copyright || `© ${new Date().getFullYear()} My Blog. All rights reserved.`
+  const displayName = siteSettings?.site_name || 'My Blog'
+  const displayCopyright = siteSettings?.site_copyright || `© ${new Date().getFullYear()} My Blog. All rights reserved.`
 
   return (
     <div className="min-h-screen flex flex-col">
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50">
         <Container>
           <div className="flex items-center justify-between h-16">
-            <Link href="/" className="text-xl font-bold text-primary-600">
-              {displayName}
-            </Link>
+            {settingsLoading ? (
+              <div className="animate-pulse h-6 w-32 bg-gray-200 rounded"></div>
+            ) : (
+              <Link href="/" className="text-xl font-bold text-primary-600">
+                {displayName}
+              </Link>
+            )}
             <nav className="flex items-center space-x-6">
               <Link 
                 href="/" 
@@ -134,7 +138,11 @@ export default function FrontendLayout({
       <footer className="bg-gray-50 border-t border-gray-200">
         <Container>
           <div className="py-8 text-center text-gray-600">
-            <p>{displayCopyright}</p>
+            {settingsLoading ? (
+              <div className="animate-pulse h-4 w-48 bg-gray-200 rounded mx-auto"></div>
+            ) : (
+              <p>{displayCopyright}</p>
+            )}
             <p className="text-sm text-gray-400 mt-2">
               本站基于 <a href="https://cf-blog.huoli.fun" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:text-primary-700">CF-blog</a> 搭建
             </p>
