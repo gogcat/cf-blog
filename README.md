@@ -89,6 +89,25 @@ npx wrangler kv:namespace create CACHE
 }
 ```
 
+**⚠️ 重要：这些资源绑定 ID 必须修改！**
+
+- `database_id` - 必须替换为你的 D1 数据库 ID
+- `id` (KV namespace) - 必须替换为你的 KV 命名空间 ID
+- `bucket_name` - 可以自定义，但必须在 Cloudflare 中创建对应的 R2 存储桶
+
+**环境变量（可选）**：
+
+```jsonc
+{
+  "vars": {
+    "SITE_URL": "https://your-worker-name.workers.dev",
+    "SITE_NAME": "My Blog"
+  }
+}
+```
+
+这些环境变量也可以在 Cloudflare Dashboard 中设置，不需要在 `wrangler.jsonc` 中修改。
+
 ### 4. 初始化数据库
 
 ```bash
