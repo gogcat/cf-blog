@@ -9,6 +9,7 @@ const navItems = [
   { href: '/admin', label: '仪表盘', icon: '📊' },
   { href: '/admin/posts', label: '文章管理', icon: '📝' },
   { href: '/admin/comments', label: '评论管理', icon: '💬' },
+  { href: '/admin/media', label: '媒体库', icon: '🖼️' },
   { href: '/admin/categories', label: '分类管理', icon: '📁' },
   { href: '/admin/tags', label: '标签管理', icon: '🏷️' },
   { href: '/admin/settings', label: '系统设置', icon: '⚙️' },
