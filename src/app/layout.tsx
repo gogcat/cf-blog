@@ -6,21 +6,29 @@ import './globals.css'
 const inter = Inter({ subsets: ['latin'] })
 
 async function getSiteSettings() {
-  const env = getEnv()
-  
-  const settings = await env.DB.prepare(
-    'SELECT key, value FROM settings WHERE deleted_at IS NULL'
-  ).all<{ key: string; value: string }>()
-  
-  const settingsMap: Record<string, string> = {}
-  for (const setting of settings.results || []) {
-    settingsMap[setting.key] = setting.value
-  }
-  
-  return {
-    site_name: settingsMap.site_name || 'My Blog',
-    site_description: settingsMap.site_description || 'A modern blog built with Next.js and Cloudflare',
-    site_copyright: settingsMap.site_copyright || `© ${new Date().getFullYear()} My Blog. All rights reserved.`,
+  try {
+    const env = getEnv()
+    
+    const settings = await env.DB.prepare(
+      'SELECT key, value FROM settings WHERE deleted_at IS NULL'
+    ).all<{ key: string; value: string }>()
+    
+    const settingsMap: Record<string, string> = {}
+    for (const setting of settings.results || []) {
+      settingsMap[setting.key] = setting.value
+    }
+    
+    return {
+      site_name: settingsMap.site_name || 'My Blog',
+      site_description: settingsMap.site_description || 'A modern blog built with Next.js and Cloudflare',
+      site_copyright: settingsMap.site_copyright || `© ${new Date().getFullYear()} My Blog. All rights reserved.`,
+    }
+  } catch (error) {
+    return {
+      site_name: 'My Blog',
+      site_description: 'A modern blog built with Next.js and Cloudflare',
+      site_copyright: `© ${new Date().getFullYear()} My Blog. All rights reserved.`,
+    }
   }
 }
 
