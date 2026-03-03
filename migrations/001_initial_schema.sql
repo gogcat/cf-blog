@@ -1,5 +1,5 @@
 -- CF-blog Database Schema
--- Version: 1.0
+-- Version: 1.1 (includes category icon field)
 
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS categories (
     name TEXT NOT NULL,
     slug TEXT UNIQUE NOT NULL,
     description TEXT,
+    icon VARCHAR(50) DEFAULT 'folder',
     sort_order INTEGER DEFAULT 0,
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
     updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
