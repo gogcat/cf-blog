@@ -3,7 +3,7 @@
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
+import { useToast } from '@/components/toast'
 
 interface MediaFile {
   key: string
@@ -19,6 +19,7 @@ export default function AdminMediaPage() {
   const [error, setError] = useState('')
   const [uploading, setUploading] = useState(false)
   const [deleting, setDeleting] = useState<string | null>(null)
+  const { showToast } = useToast()
   const [cursor, setCursor] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -110,7 +111,7 @@ export default function AdminMediaPage() {
 
   const copyUrl = (url: string) => {
     navigator.clipboard.writeText(url)
-    alert('链接已复制到剪贴板')
+    showToast('链接已复制到剪贴板')
   }
 
   const formatSize = (bytes: number) => {
