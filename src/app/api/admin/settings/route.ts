@@ -38,11 +38,17 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ success: false, error: 'Key is required' }, { status: 400 })
     }
     
-    await env.DB.prepare(`
+    const result = await env.DB.prepare(`
       UPDATE settings 
       SET value = ?, updated_at = CURRENT_TIMESTAMP 
       WHERE key = ?
     `).bind(value, key).run()
+    
+    if (result.meta.changes === 0) {
+      await env.DB.prepare(`
+        INSERT INTO settings (id, key, value) VALUES (lower(hex(randomblob(4))), ?, ?)
+      `).bind(key, value).run()
+    }
     
     return NextResponse.json({ success: true })
   } catch (error) {
