@@ -4,6 +4,7 @@
 import { useEffect, useState, useRef } from 'react'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/toast'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 
 interface MediaFile {
   key: string
@@ -19,6 +20,7 @@ export default function AdminMediaPage() {
   const [error, setError] = useState('')
   const [uploading, setUploading] = useState(false)
   const [deleting, setDeleting] = useState<string | null>(null)
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null)
   const { showToast } = useToast()
   const [cursor, setCursor] = useState<string | null>(null)
   const [hasMore, setHasMore] = useState(false)
@@ -88,8 +90,7 @@ export default function AdminMediaPage() {
   }
 
   const handleDelete = async (key: string) => {
-    if (!confirm('确定要删除这个文件吗？')) return
-
+    setDeleteConfirm(null)
     setDeleting(key)
     try {
       const res = await fetch(`/api/admin/media?key=${encodeURIComponent(key)}`, {
@@ -99,11 +100,12 @@ export default function AdminMediaPage() {
       
       if (data.success) {
         setFiles(prev => prev.filter(f => f.key !== key))
+        showToast('删除成功')
       } else {
-        setError(data.error || '删除失败')
+        showToast(data.error || '删除失败', 'error')
       }
     } catch {
-      setError('删除失败')
+      showToast('删除失败', 'error')
     } finally {
       setDeleting(null)
     }
@@ -171,7 +173,7 @@ export default function AdminMediaPage() {
                       复制
                     </button>
                     <button
-                      onClick={() => handleDelete(file.key)}
+                      onClick={() => setDeleteConfirm(file.key)}
                       disabled={deleting === file.key}
                       className="p-2 bg-red-500 text-white rounded-lg text-sm hover:bg-red-600 disabled:opacity-50"
                     >
@@ -202,6 +204,32 @@ export default function AdminMediaPage() {
           )}
         </>
       )}
+
+      <Dialog open={!!deleteConfirm} onOpenChange={(open) => !open && setDeleteConfirm(null)}>
+        <DialogContent onClose={() => setDeleteConfirm(null)}>
+          <DialogHeader>
+            <DialogTitle>确认删除</DialogTitle>
+          </DialogHeader>
+          <p className="text-gray-600">
+            确定要删除文件 <span className="font-medium">{deleteConfirm?.split('/').pop()}</span> 吗？此操作无法撤销。
+          </p>
+          <DialogFooter>
+            <button
+              onClick={() => setDeleteConfirm(null)}
+              className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              取消
+            </button>
+            <button
+              onClick={() => deleteConfirm && handleDelete(deleteConfirm)}
+              disabled={!!deleting}
+              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 disabled:opacity-50"
+            >
+              {deleting ? '删除中...' : '确定删除'}
+            </button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }
