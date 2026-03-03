@@ -19,6 +19,8 @@ interface SiteSettings {
   site_description: string
   site_copyright: string
   site_favicon: string
+  turnstile_site_key: string
+  turnstile_secret_key: string
 }
 
 interface AuthResponse {
@@ -67,6 +69,8 @@ export default function AdminSettingsPage() {
     site_description: '',
     site_copyright: '',
     site_favicon: '',
+    turnstile_site_key: '',
+    turnstile_secret_key: '',
   })
   
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -95,6 +99,8 @@ export default function AdminSettingsPage() {
             site_description: settingsRes.data.settings.site_description || '',
             site_copyright: settingsRes.data.settings.site_copyright || '',
             site_favicon: settingsRes.data.settings.site_favicon || '',
+            turnstile_site_key: settingsRes.data.settings.turnstile_site_key || '',
+            turnstile_secret_key: settingsRes.data.settings.turnstile_secret_key || '',
           })
         }
       })
@@ -427,6 +433,33 @@ export default function AdminSettingsPage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
+            <div className="pt-6 mt-6 border-t border-gray-200">
+              <h4 className="text-lg font-medium text-gray-900 mb-4">Cloudflare Turnstile 验证</h4>
+              <p className="text-sm text-gray-500 mb-4">用于友链申请等表单的机器人验证，可有效防止垃圾提交</p>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Site Key（前端使用）</label>
+                  <input
+                    type="text"
+                    value={siteSettings.turnstile_site_key}
+                    onChange={(e) => setSiteSettings(prev => ({ ...prev, turnstile_site_key: e.target.value }))}
+                    placeholder="0x4AAAAAAAxxx"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Secret Key（后端验证）</label>
+                  <input
+                    type="text"
+                    value={siteSettings.turnstile_secret_key}
+                    onChange={(e) => setSiteSettings(prev => ({ ...prev, turnstile_secret_key: e.target.value }))}
+                    placeholder="0x4AAAAAAAxxx"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                  />
+                  <p className="text-xs text-gray-500 mt-1">请前往 <a href="https://www.cloudflare.com/products/turnstile/" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">Cloudflare Turnstile</a> 获取密钥</p>
+                </div>
+              </div>
+            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">网站图标 (Favicon)</label>
               <div className="flex items-center gap-4">
@@ -484,6 +517,8 @@ export default function AdminSettingsPage() {
                   await handleSiteSettingsSave('site_description', siteSettings.site_description)
                   await handleSiteSettingsSave('site_copyright', siteSettings.site_copyright)
                   await handleSiteSettingsSave('site_favicon', siteSettings.site_favicon)
+                  await handleSiteSettingsSave('turnstile_site_key', siteSettings.turnstile_site_key)
+                  await handleSiteSettingsSave('turnstile_secret_key', siteSettings.turnstile_secret_key)
                 }}
                 disabled={saving}
                 className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50"
