@@ -38,6 +38,7 @@ export async function GET(request: NextRequest): Promise<Response> {
     const category = searchParams.get('category')
     const tag = searchParams.get('tag')
     const authorId = searchParams.get('author_id')
+    const search = searchParams.get('search')
     
     const offset = (page - 1) * limit
     
@@ -64,6 +65,12 @@ export async function GET(request: NextRequest): Promise<Response> {
     if (tag) {
       whereClause += ' AND EXISTS (SELECT 1 FROM post_tags pt JOIN tags t ON pt.tag_id = t.id WHERE pt.post_id = p.id AND t.slug = ?)'
       params.push(tag)
+    }
+    
+    if (search) {
+      whereClause += ' AND (p.title LIKE ? OR p.content LIKE ? OR p.excerpt LIKE ?)'
+      const searchPattern = `%${search}%`
+      params.push(searchPattern, searchPattern, searchPattern)
     }
     
     const countResult = await env.DB.prepare(

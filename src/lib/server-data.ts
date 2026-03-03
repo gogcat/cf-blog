@@ -13,6 +13,7 @@ export async function getPosts(page = 1, limit = 10, filters?: {
   category?: string
   tag?: string
   authorId?: string
+  search?: string
 }): Promise<{ posts: PostListItem[]; pagination: Pagination }> {
   try {
     const env = getEnv()
@@ -41,6 +42,12 @@ export async function getPosts(page = 1, limit = 10, filters?: {
     if (filters?.tag) {
       whereClause += ' AND EXISTS (SELECT 1 FROM post_tags pt JOIN tags t ON pt.tag_id = t.id WHERE pt.post_id = p.id AND t.slug = ?)'
       params.push(filters.tag)
+    }
+    
+    if (filters?.search) {
+      whereClause += ' AND (p.title LIKE ? OR p.content LIKE ? OR p.excerpt LIKE ?)'
+      const searchPattern = `%${filters.search}%`
+      params.push(searchPattern, searchPattern, searchPattern)
     }
     
     const countResult = await env.DB.prepare(

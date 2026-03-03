@@ -1,9 +1,11 @@
 'use client'
 
 import { useState, useEffect, useRef, useCallback } from 'react'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Container } from '@/components/ui/container'
+import SearchBox from '@/components/search-box'
 import type { PostListItem, CategoryGroup } from '@/types'
 
 interface PostListClientProps {
@@ -21,18 +23,25 @@ function formatDate(dateString: string): string {
 }
 
 export default function PostListClient({ initialPosts, initialHasMore }: PostListClientProps) {
+  const searchParams = useSearchParams()
   const [categoryGroups, setCategoryGroups] = useState<CategoryGroup[]>([])
   const [loadingMore, setLoadingMore] = useState(false)
   const [page, setPage] = useState(1)
   const [hasMore, setHasMore] = useState(initialHasMore)
   const [allPosts, setAllPosts] = useState<PostListItem[]>(initialPosts)
+  const [searchKeyword, setSearchKeyword] = useState(searchParams.get('search') || '')
   const loaderRef = useRef<HTMLDivElement>(null)
 
-  const fetchPosts = useCallback(async (pageNum: number) => {
+  const fetchPosts = useCallback(async (pageNum: number, search?: string) => {
     try {
       setLoadingMore(true)
       
-      const res = await fetch(`/api/posts?page=${pageNum}&limit=12`)
+      let url = `/api/posts?page=${pageNum}&limit=12`
+      if (search) {
+        url += `&search=${encodeURIComponent(search)}`
+      }
+      
+      const res = await fetch(url)
       const data = await res.json() as { 
         success: boolean 
         data: { 
@@ -79,6 +88,20 @@ export default function PostListClient({ initialPosts, initialHasMore }: PostLis
   }
 
   useEffect(() => {
+    const keyword = searchParams.get('search') || ''
+    setSearchKeyword(keyword)
+    setPage(1)
+    setHasMore(true)
+    setAllPosts([])
+  }, [searchParams])
+
+  useEffect(() => {
+    if (allPosts.length === 0 && hasMore) {
+      fetchPosts(1, searchKeyword)
+    }
+  }, [searchKeyword, allPosts.length, hasMore])
+
+  useEffect(() => {
     const grouped = groupPostsByCategory(allPosts)
     setCategoryGroups(grouped)
   }, [allPosts])
@@ -87,7 +110,7 @@ export default function PostListClient({ initialPosts, initialHasMore }: PostLis
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMore && !loadingMore) {
-          fetchPosts(page + 1)
+          fetchPosts(page + 1, searchKeyword)
         }
       },
       { threshold: 0.1 }
@@ -98,7 +121,7 @@ export default function PostListClient({ initialPosts, initialHasMore }: PostLis
     }
 
     return () => observer.disconnect()
-  }, [hasMore, loadingMore, page, fetchPosts])
+  }, [hasMore, loadingMore, page, fetchPosts, searchKeyword])
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -107,6 +130,9 @@ export default function PostListClient({ initialPosts, initialHasMore }: PostLis
           <div className="py-16 text-center">
             <h1 className="text-4xl font-bold text-gray-900 mb-4">文章归档</h1>
             <p className="text-gray-600">探索所有文章，按分类浏览</p>
+          </div>
+          <div className="pb-8">
+            <SearchBox />
           </div>
         </Container>
       </div>
