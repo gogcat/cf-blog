@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useToast } from '@/components/toast'
 
 interface Comment {
   id: string
@@ -23,6 +24,7 @@ export default function AdminCommentsPage() {
   const [comments, setComments] = useState<Comment[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const { showToast } = useToast()
   const [settings, setSettings] = useState<Settings>({
     comment_moderation: 'false',
     comment_keywords: '',
@@ -70,9 +72,11 @@ export default function AdminCommentsPage() {
       const data = await res.json() as { success: boolean }
       if (data.success) {
         setSettings(prev => ({ ...prev, [key]: value }))
+        showToast('设置保存成功', 'success')
       }
     } catch (error) {
       console.error('Failed to update setting:', error)
+      showToast('设置保存失败', 'error')
     } finally {
       setSettingsLoading(false)
     }
@@ -106,9 +110,11 @@ export default function AdminCommentsPage() {
       const data = await res.json() as { success: boolean }
       if (data.success) {
         setComments(prev => prev.map(c => c.id === id ? { ...c, status: 'approved' } : c))
+        showToast('评论已通过', 'success')
       }
     } catch (error) {
       console.error('Failed to approve comment:', error)
+      showToast('操作失败', 'error')
     }
   }
 
@@ -122,9 +128,11 @@ export default function AdminCommentsPage() {
       const data = await res.json() as { success: boolean }
       if (data.success) {
         setComments(prev => prev.map(c => c.id === id ? { ...c, status: 'rejected' } : c))
+        showToast('评论已拒绝', 'success')
       }
     } catch (error) {
       console.error('Failed to reject comment:', error)
+      showToast('操作失败', 'error')
     }
   }
 
@@ -135,9 +143,11 @@ export default function AdminCommentsPage() {
       const data = await res.json() as { success: boolean }
       if (data.success) {
         setComments(prev => prev.filter(c => c.id !== id))
+        showToast('评论已删除', 'success')
       }
     } catch (error) {
       console.error('Failed to delete comment:', error)
+      showToast('删除失败', 'error')
     }
   }
 

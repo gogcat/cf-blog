@@ -7,6 +7,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { useToast } from '@/components/toast'
 import { FolderOpen, BookOpen, Code, Lightbulb, Camera, Music, Globe, Heart, Star, Rocket, Paintbrush } from 'lucide-react'
 
 const CATEGORY_ICONS = [
@@ -37,6 +38,7 @@ export default function AdminCategoriesPage() {
   const [categories, setCategories] = useState<Category[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const { showToast } = useToast()
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingCategory, setEditingCategory] = useState<Category | null>(null)
@@ -118,11 +120,12 @@ export default function AdminCategoriesPage() {
       if (data.success) {
         handleCloseDialog()
         fetchCategories()
+        showToast(editingCategory ? '分类更新成功' : '分类创建成功', 'success')
       } else {
-        setError(data.error || (editingCategory ? '更新分类失败' : '创建分类失败'))
+        showToast(data.error || (editingCategory ? '更新分类失败' : '创建分类失败'), 'error')
       }
     } catch {
-      setError(editingCategory ? '更新分类失败' : '创建分类失败')
+      showToast(editingCategory ? '更新分类失败' : '创建分类失败', 'error')
     } finally {
       setSubmitting(false)
     }
@@ -148,11 +151,12 @@ export default function AdminCategoriesPage() {
 
       if (data.success) {
         fetchCategories()
+        showToast('分类删除成功', 'success')
       } else {
-        setError(data.error || '删除分类失败')
+        showToast(data.error || '删除分类失败', 'error')
       }
     } catch {
-      setError('删除分类失败')
+      showToast('删除分类失败', 'error')
     }
   }
 

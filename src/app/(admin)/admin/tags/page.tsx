@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
+import { useToast } from '@/components/toast'
 
 interface Tag {
   id: string
@@ -18,6 +19,7 @@ export default function AdminTagsPage() {
   const [tags, setTags] = useState<Tag[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
+  const { showToast } = useToast()
 
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [editingTag, setEditingTag] = useState<Tag | null>(null)
@@ -96,11 +98,12 @@ export default function AdminTagsPage() {
       if (data.success) {
         handleCloseDialog()
         fetchTags()
+        showToast(editingTag ? '标签更新成功' : '标签创建成功', 'success')
       } else {
-        setError(data.error || (editingTag ? '更新标签失败' : '创建标签失败'))
+        showToast(data.error || (editingTag ? '更新标签失败' : '创建标签失败'), 'error')
       }
     } catch {
-      setError(editingTag ? '更新标签失败' : '创建标签失败')
+      showToast(editingTag ? '更新标签失败' : '创建标签失败', 'error')
     } finally {
       setSubmitting(false)
     }
@@ -126,11 +129,12 @@ export default function AdminTagsPage() {
 
       if (data.success) {
         fetchTags()
+        showToast('标签删除成功', 'success')
       } else {
-        setError(data.error || '删除标签失败')
+        showToast(data.error || '删除标签失败', 'error')
       }
     } catch {
-      setError('删除标签失败')
+      showToast('删除标签失败', 'error')
     }
   }
 
