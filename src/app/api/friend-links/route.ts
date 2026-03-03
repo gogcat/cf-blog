@@ -1,0 +1,64 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { getEnv, successResponse, errorResponse } from '@/lib/api'
+import { generateUUID } from '@/lib/utils'
+
+export async function GET(request: NextRequest): Promise<NextResponse> {
+  try {
+    const env = getEnv()
+    
+    const { searchParams } = new URL(request.url)
+    const status = searchParams.get('status') || 'approved'
+    
+    const friendLinks = await env.DB.prepare(`
+      SELECT id, name, url, description, logo, contact_email, status, sort_order, created_at
+      FROM friend_links 
+      WHERE status = ?
+      ORDER BY sort_order ASC, created_at DESC
+    `).all(status)
+    
+    return successResponse({
+      friendLinks: friendLinks.results || []
+    })
+  } catch (error) {
+    console.error('Get friend links error:', error)
+    return errorResponse('Failed to fetch friend links', 500)
+  }
+}
+
+export async function POST(request: NextRequest): Promise<NextResponse> {
+  try {
+    const env = getEnv()
+    const body = await request.json() as {
+      name: string
+      url: string
+      description?: string
+      logo?: string
+      contact_email?: string
+    }
+    
+    const { name, url, description, logo, contact_email } = body
+    
+    if (!name || !url) {
+      return errorResponse('Name and URL are required', 400)
+    }
+    
+    try {
+      new URL(url)
+    } catch {
+      return errorResponse('Invalid URL format', 400)
+    }
+    
+    const id = generateUUID()
+    await env.DB.prepare(`
+      INSERT INTO friend_links (id, name, url, description, logo, contact_email, status)
+      VALUES (?, ?, ?, ?, ?, ?, 'pending')
+    `).bind(id, name, url, description || '', logo || '', contact_email || '').run()
+    
+    return successResponse({
+      message: 'Friend link application submitted, pending approval'
+    })
+  } catch (error) {
+    console.error('Create friend link error:', error)
+    return errorResponse('Failed to submit friend link', 500)
+  }
+}

@@ -1,5 +1,5 @@
 -- CF-blog Database Schema
--- Version: 1.1 (includes category icon field)
+-- Version: 1.2 (includes friends links table)
 
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
@@ -157,3 +157,18 @@ INSERT OR IGNORE INTO settings (id, key, value) VALUES
     (lower(hex(randomblob(4))), 'site_description', 'A blog built with Next.js'),
     (lower(hex(randomblob(4))), 'site_copyright', '© 2026 My Blog. All rights reserved.'),
     (lower(hex(randomblob(4))), 'site_favicon', '');
+
+-- Friends Links table
+CREATE TABLE IF NOT EXISTS friend_links (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    url TEXT NOT NULL,
+    description TEXT,
+    logo TEXT,
+    contact_email TEXT,
+    status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'approved', 'rejected')),
+    sort_order INTEGER DEFAULT 0,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_friend_links_status ON friend_links(status);

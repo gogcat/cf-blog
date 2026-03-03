@@ -12,12 +12,18 @@ const Dialog = ({ open, onOpenChange, children }: DialogProps) => {
   return <>{open && children}</>
 }
 
+const DialogTrigger = ({ children }: { children: React.ReactNode }) => {
+  return <>{children}</>
+}
+
 const DialogContent = ({ 
   children, 
-  onClose 
+  onClose,
+  className = ''
 }: { 
   children: React.ReactNode
-  onClose?: () => void 
+  onClose?: () => void
+  className?: string
 }) => {
   React.useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
@@ -57,4 +63,4 @@ const DialogFooter = ({ children }: { children: React.ReactNode }) => {
   return <div className="flex justify-end gap-2 mt-6">{children}</div>
 }
 
-export { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter }
+export { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter }

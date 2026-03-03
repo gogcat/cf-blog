@@ -112,6 +112,12 @@ export default function FrontendLayout({
               >
                 文章
               </Link>
+              <Link 
+                href="/friends" 
+                className={`text-gray-600 hover:text-gray-900 ${pathname === '/friends' ? 'text-primary-600' : ''}`}
+              >
+                友链
+              </Link>
               {!loading && (
                 user ? (
                   <div className="flex items-center gap-4">
