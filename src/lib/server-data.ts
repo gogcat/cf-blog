@@ -299,3 +299,32 @@ export async function getCurrentUser(): Promise<User | null> {
     return null
   }
 }
+
+export interface FriendLink {
+  id: string
+  name: string
+  url: string
+  description: string
+  logo: string
+  contact_email: string
+  status: string
+  sort_order: number
+  created_at: string
+}
+
+export async function getFriendLinks(status = 'approved'): Promise<FriendLink[]> {
+  try {
+    const env = getEnv()
+    const result = await env.DB.prepare(`
+      SELECT id, name, url, description, logo, contact_email, status, sort_order, created_at
+      FROM friend_links 
+      WHERE status = ?
+      ORDER BY sort_order ASC, created_at DESC
+    `).bind(status).all<FriendLink>()
+    
+    return result.results || []
+  } catch (error) {
+    console.error('Failed to get friend links:', error)
+    return []
+  }
+}

@@ -145,5 +145,6 @@ export interface Env {
   SITE_URL: string
   SITE_NAME: string
   R2_PUBLIC_URL?: string
+  TURNSTILE_SECRET_KEY?: string
   request?: Request
 }

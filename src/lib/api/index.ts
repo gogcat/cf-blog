@@ -23,6 +23,7 @@ export function getEnv(): Env {
     SITE_URL: cloudflareContext.env.SITE_URL || 'https://cf-blog.huoli.fun',
     SITE_NAME: cloudflareContext.env.SITE_NAME || 'My Blog',
     R2_PUBLIC_URL: cloudflareContext.env.R2_PUBLIC_URL,
+    TURNSTILE_SECRET_KEY: cloudflareContext.env.TURNSTILE_SECRET_KEY,
   }
 }
 

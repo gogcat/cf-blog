@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getEnv, successResponse, errorResponse } from '@/lib/api'
+import { getEnv, successResponse, errorResponse, getClientInfo } from '@/lib/api'
 import { generateUUID } from '@/lib/utils'
+import { verifyTurnstile } from '@/lib/turnstile'
 
 export async function GET(request: NextRequest): Promise<NextResponse> {
   try {
@@ -34,9 +35,10 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       description?: string
       logo?: string
       contact_email?: string
+      'cf-turnstile-response'?: string
     }
     
-    const { name, url, description, logo, contact_email } = body
+    const { name, url, description, logo, contact_email, 'cf-turnstile-response': turnstileToken } = body
     
     if (!name || !url) {
       return errorResponse('Name and URL are required', 400)
@@ -46,6 +48,19 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       new URL(url)
     } catch {
       return errorResponse('Invalid URL format', 400)
+    }
+    
+    if (env.TURNSTILE_SECRET_KEY) {
+      const { ipAddress } = getClientInfo(request)
+      const isValid = await verifyTurnstile(
+        turnstileToken || '',
+        env.TURNSTILE_SECRET_KEY,
+        ipAddress || undefined
+      )
+      
+      if (!isValid) {
+        return errorResponse('验证失败，请重试', 400, 'TURNSTILE_FAILED')
+      }
     }
     
     const id = generateUUID()
