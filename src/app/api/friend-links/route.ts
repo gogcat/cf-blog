@@ -14,7 +14,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       FROM friend_links 
       WHERE status = ?
       ORDER BY sort_order ASC, created_at DESC
-    `).all(status)
+    `).bind(status).all()
     
     return successResponse({
       friendLinks: friendLinks.results || []
