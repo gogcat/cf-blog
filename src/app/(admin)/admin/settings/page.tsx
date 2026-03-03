@@ -17,6 +17,7 @@ interface SiteSettings {
   site_subtitle: string
   site_description: string
   site_copyright: string
+  site_favicon: string
 }
 
 interface AuthResponse {
@@ -64,9 +65,11 @@ export default function AdminSettingsPage() {
     site_subtitle: '',
     site_description: '',
     site_copyright: '',
+    site_favicon: '',
   })
   
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const faviconInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     Promise.all([
@@ -90,6 +93,7 @@ export default function AdminSettingsPage() {
             site_subtitle: settingsRes.data.settings.site_subtitle || '',
             site_description: settingsRes.data.settings.site_description || '',
             site_copyright: settingsRes.data.settings.site_copyright || '',
+            site_favicon: settingsRes.data.settings.site_favicon || '',
           })
         }
       })
@@ -173,6 +177,28 @@ export default function AdminSettingsPage() {
       
       if (data.success && data.data) {
         setProfileForm(prev => ({ ...prev, avatar_url: data.data!.url }))
+      }
+    } catch (error) {
+      console.error('Upload failed:', error)
+    }
+  }
+
+  const handleFaviconUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    
+    const formData = new FormData()
+    formData.append('file', file)
+    
+    try {
+      const res = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      })
+      const data = await res.json() as UploadResponse
+      
+      if (data.success && data.data) {
+        setSiteSettings(prev => ({ ...prev, site_favicon: data.data!.url }))
       }
     } catch (error) {
       console.error('Upload failed:', error)
@@ -404,6 +430,54 @@ export default function AdminSettingsPage() {
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">网站图标 (Favicon)</label>
+              <div className="flex items-center gap-4">
+                <div className="relative">
+                  {siteSettings.site_favicon ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={siteSettings.site_favicon}
+                      alt="Favicon"
+                      className="w-12 h-12 rounded-lg object-cover border border-gray-200"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center border border-gray-200">
+                      <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                    </div>
+                  )}
+                  <button
+                    onClick={() => faviconInputRef.current?.click()}
+                    className="absolute bottom-0 right-0 w-6 h-6 bg-primary-600 text-white rounded-full flex items-center justify-center hover:bg-primary-700"
+                  >
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </button>
+                  <input
+                    ref={faviconInputRef}
+                    type="file"
+                    accept="image/x-icon,image/png,image/svg+xml"
+                    onChange={handleFaviconUpload}
+                    className="hidden"
+                  />
+                </div>
+                <div>
+                  <p className="text-sm text-gray-500">推荐 32x32 或 48x48 的 PNG/SVG 图标</p>
+                  {siteSettings.site_favicon && (
+                    <button
+                      onClick={() => setSiteSettings(prev => ({ ...prev, site_favicon: '' }))}
+                      className="text-sm text-red-600 hover:text-red-700"
+                    >
+                      移除图标
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
             <div className="flex justify-end pt-4">
               <button
                 onClick={async () => {
@@ -412,6 +486,7 @@ export default function AdminSettingsPage() {
                   await handleSiteSettingsSave('site_subtitle', siteSettings.site_subtitle)
                   await handleSiteSettingsSave('site_description', siteSettings.site_description)
                   await handleSiteSettingsSave('site_copyright', siteSettings.site_copyright)
+                  await handleSiteSettingsSave('site_favicon', siteSettings.site_favicon)
                 }}
                 disabled={saving}
                 className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50"

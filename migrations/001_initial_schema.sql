@@ -155,4 +155,5 @@ INSERT OR IGNORE INTO settings (id, key, value) VALUES
     (lower(hex(randomblob(4))), 'site_title', '我的博客'),
     (lower(hex(randomblob(4))), 'site_subtitle', '分享技术，记录生活'),
     (lower(hex(randomblob(4))), 'site_description', 'A blog built with Next.js'),
-    (lower(hex(randomblob(4))), 'site_copyright', '© 2026 My Blog. All rights reserved.');
+    (lower(hex(randomblob(4))), 'site_copyright', '© 2026 My Blog. All rights reserved.'),
+    (lower(hex(randomblob(4))), 'site_favicon', '');

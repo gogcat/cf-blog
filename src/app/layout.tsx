@@ -23,12 +23,14 @@ async function getSiteSettings() {
       site_name: settingsMap.site_name || 'My Blog',
       site_description: settingsMap.site_description || 'A modern blog built with Next.js and Cloudflare',
       site_copyright: settingsMap.site_copyright || `© ${new Date().getFullYear()} My Blog. All rights reserved.`,
+      site_favicon: settingsMap.site_favicon || '',
     }
   } catch (error) {
     return {
       site_name: 'My Blog',
       site_description: 'A modern blog built with Next.js and Cloudflare',
       site_copyright: `© ${new Date().getFullYear()} My Blog. All rights reserved.`,
+      site_favicon: '',
     }
   }
 }
@@ -36,7 +38,7 @@ async function getSiteSettings() {
 export async function generateMetadata(): Promise<Metadata> {
   const siteSettings = await getSiteSettings()
   
-  return {
+  const metadata: Metadata = {
     title: {
       default: siteSettings.site_name,
       template: `%s | ${siteSettings.site_name}`,
@@ -54,6 +56,14 @@ export async function generateMetadata(): Promise<Metadata> {
       description: siteSettings.site_description,
     },
   }
+
+  if (siteSettings.site_favicon) {
+    metadata.icons = {
+      icon: siteSettings.site_favicon,
+    }
+  }
+
+  return metadata
 }
 
 export default async function RootLayout({
