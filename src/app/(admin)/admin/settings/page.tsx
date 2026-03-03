@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { useToast } from '@/components/toast'
 
 interface UserProfile {
   id: string
@@ -47,7 +48,7 @@ export default function AdminSettingsPage() {
   const [activeTab, setActiveTab] = useState<'profile' | 'site'>('profile')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
+  const { showToast } = useToast()
   
   const [profile, setProfile] = useState<UserProfile | null>(null)
   const [profileForm, setProfileForm] = useState({
@@ -102,12 +103,11 @@ export default function AdminSettingsPage() {
 
   const handleProfileSave = async () => {
     if (profileForm.newPassword && profileForm.newPassword !== profileForm.confirmPassword) {
-      setMessage({ type: 'error', text: '两次输入的密码不一致' })
+      showToast('两次输入的密码不一致', 'error')
       return
     }
     
     setSaving(true)
-    setMessage(null)
     
     try {
       const res = await fetch('/api/admin/profile', {
@@ -124,14 +124,14 @@ export default function AdminSettingsPage() {
       const data = await res.json() as ProfileUpdateResponse
       
       if (data.success) {
-        setMessage({ type: 'success', text: '保存成功' })
+        showToast('保存成功', 'success')
         setProfile(prev => prev ? { ...prev, email: profileForm.email, name: profileForm.name, avatar_url: profileForm.avatar_url } : null)
         setProfileForm(prev => ({ ...prev, currentPassword: '', newPassword: '', confirmPassword: '' }))
       } else {
-        setMessage({ type: 'error', text: data.error || '保存失败' })
+        showToast(data.error || '保存失败', 'error')
       }
     } catch {
-      setMessage({ type: 'error', text: '保存失败' })
+      showToast('保存失败', 'error')
     } finally {
       setSaving(false)
     }
@@ -139,7 +139,6 @@ export default function AdminSettingsPage() {
 
   const handleSiteSettingsSave = async (key: string, value: string) => {
     setSaving(true)
-    setMessage(null)
     
     try {
       const res = await fetch('/api/admin/settings', {
@@ -150,12 +149,12 @@ export default function AdminSettingsPage() {
       const data = await res.json() as ProfileUpdateResponse
       
       if (data.success) {
-        setMessage({ type: 'success', text: '保存成功' })
+        showToast('保存成功', 'success')
       } else {
-        setMessage({ type: 'error', text: data.error || '保存失败' })
+        showToast(data.error || '保存失败', 'error')
       }
     } catch {
-      setMessage({ type: 'error', text: '保存失败' })
+      showToast('保存失败', 'error')
     } finally {
       setSaving(false)
     }
@@ -218,12 +217,6 @@ export default function AdminSettingsPage() {
     <div>
       <h2 className="text-2xl font-bold text-gray-900 mb-6">系统设置</h2>
       
-      {message && (
-        <div className={`mb-4 p-3 text-sm rounded-md ${message.type === 'success' ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'}`}>
-          {message.text}
-        </div>
-      )}
-
       <div className="flex gap-4 border-b border-gray-200 mb-6">
         <button
           onClick={() => setActiveTab('profile')}
