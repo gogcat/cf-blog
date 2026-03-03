@@ -41,7 +41,7 @@ export default function FriendsPage() {
   const fetchFriendLinks = async () => {
     try {
       const res = await fetch('/api/friend-links?status=approved')
-      const data = await res.json()
+      const data = await res.json() as { success: boolean; data: { friendLinks: FriendLink[] } }
       if (data.success) {
         setFriendLinks(data.data.friendLinks || [])
       }
@@ -62,7 +62,7 @@ export default function FriendsPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
       })
-      const data = await res.json()
+      const data = await res.json() as { success: boolean; error?: string }
 
       if (data.success) {
         showToast('友链申请已提交，等待审核', 'success')
