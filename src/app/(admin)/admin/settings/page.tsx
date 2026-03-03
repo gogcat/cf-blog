@@ -176,9 +176,11 @@ export default function AdminSettingsPage() {
       
       if (data.success && data.data) {
         setProfileForm(prev => ({ ...prev, avatar_url: data.data!.url }))
+        showToast('头像已上传，请点击"保存"按钮生效', 'info')
       }
     } catch (error) {
       console.error('Upload failed:', error)
+      showToast('上传失败', 'error')
     }
   }
 
@@ -198,9 +200,11 @@ export default function AdminSettingsPage() {
       
       if (data.success && data.data) {
         setSiteSettings(prev => ({ ...prev, site_favicon: data.data!.url }))
+        showToast('图标已上传，请点击"保存"按钮生效', 'info')
       }
     } catch (error) {
       console.error('Upload failed:', error)
+      showToast('上传失败', 'error')
     }
   }
 
