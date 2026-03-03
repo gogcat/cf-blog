@@ -4,6 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { Container } from '@/components/ui/container'
 import CommentSection from '@/components/comment-section'
+import ViewCounter from '@/components/view-counter'
 import { getPostBySlug, getCommentsByPostSlug, getCurrentUser } from '@/lib/server-data'
 
 export const dynamic = 'force-dynamic'
@@ -138,7 +139,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ slu
                   {formatDate(post.published_at)}
                 </time>
                 <span>·</span>
-                <span>{post.view_count} 阅读</span>
+                <ViewCounter slug={slug} initialCount={post.view_count} />
               </div>
               
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
