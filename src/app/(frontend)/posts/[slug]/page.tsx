@@ -6,6 +6,8 @@ import { Container } from '@/components/ui/container'
 import CommentSection from '@/components/comment-section'
 import { getPostBySlug, getCommentsByPostSlug, getCurrentUser } from '@/lib/server-data'
 
+export const dynamic = 'force-dynamic'
+
 function extractFirstImage(content: string): string | null {
   if (!content) return null
   

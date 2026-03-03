@@ -8,6 +8,10 @@ export function getEnv(): Env {
   const cloudflareContext = (globalThis as any)[Symbol.for('__cloudflare-context__')]
   
   if (!cloudflareContext?.env?.DB) {
+    const isBuildTime = typeof window === 'undefined' && process.env.NODE_ENV === 'production'
+    if (isBuildTime) {
+      throw new Error('Cloudflare environment not available during build. This application must run on Cloudflare Workers.')
+    }
     throw new Error('Cloudflare environment not available. This application must run on Cloudflare Workers.')
   }
   

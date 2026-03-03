@@ -2,6 +2,8 @@ import HomePageClient from '@/components/home-client'
 import { getPosts, getSettings } from '@/lib/server-data'
 import type { PostListItem } from '@/types'
 
+export const dynamic = 'force-dynamic'
+
 export default async function HomePage() {
   const { posts, pagination } = await getPosts(1, 6)
   const siteSettings = await getSettings()
