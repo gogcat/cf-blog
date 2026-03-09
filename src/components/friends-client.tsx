@@ -97,8 +97,8 @@ export default function FriendsPageClient({
     <Container>
       <div className="max-w-4xl mx-auto py-8">
         <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">友情链接</h1>
-          <p className="text-gray-600">与志同道合的朋友们相互链接</p>
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-4">友情链接</h1>
+          <p className="text-gray-600 dark:text-gray-300">与志同道合的朋友们相互链接</p>
         </div>
 
         {friendLinks.length > 0 && (
@@ -110,26 +110,26 @@ export default function FriendsPageClient({
                   href={link.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block p-4 bg-white border border-gray-200 rounded-lg hover:border-primary-300 hover:shadow-md transition-all group"
+                  className="block p-4 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-lg hover:border-primary-300 dark:hover:border-primary-600 hover:shadow-md transition-all group"
                 >
                   <div className="flex items-start gap-3">
                     {link.logo ? (
                       // eslint-disable-next-line @next/next/no-img-element
                       <img src={link.logo} alt={link.name} className="w-10 h-10 rounded object-cover" />
                     ) : (
-                      <div className="w-10 h-10 bg-gray-100 rounded flex items-center justify-center">
-                        <Link2 className="w-5 h-5 text-gray-400" />
+                      <div className="w-10 h-10 bg-gray-100 dark:bg-gray-800 rounded flex items-center justify-center">
+                        <Link2 className="w-5 h-5 text-gray-400 dark:text-gray-500" />
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <h3 className="font-medium text-gray-900 truncate group-hover:text-primary-600">
+                        <h3 className="font-medium text-gray-900 dark:text-gray-100 truncate group-hover:text-primary-600">
                           {link.name}
                         </h3>
-                        <ExternalLink className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                        <ExternalLink className="w-4 h-4 text-gray-400 dark:text-gray-500 flex-shrink-0" />
                       </div>
                       {link.description && (
-                        <p className="text-sm text-gray-500 mt-1 line-clamp-2">{link.description}</p>
+                        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{link.description}</p>
                       )}
                     </div>
                   </div>
@@ -140,12 +140,12 @@ export default function FriendsPageClient({
         )}
 
         <div>
-          <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-6">
+          <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4 mb-6">
             <div className="flex items-start gap-3">
-              <CheckCircle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle className="w-5 h-5 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-medium text-amber-800">申请友链须知</h3>
-                <ul className="text-sm text-amber-700 mt-1 space-y-1">
+                <h3 className="font-medium text-amber-800 dark:text-amber-200">申请友链须知</h3>
+                <ul className="text-sm text-amber-700 dark:text-amber-300 mt-1 space-y-1">
                   <li>• 请先在您的网站上添加本站链接后再申请</li>
                   <li>• 申请后需要等待审核，审核通过后才会显示</li>
                   <li>• 请确保网站内容合法健康，遵守互联网规范</li>
@@ -156,7 +156,7 @@ export default function FriendsPageClient({
 
           <Card>
             <CardContent className="p-6">
-              <h2 className="text-xl font-semibold text-gray-900 mb-6">申请友链</h2>
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-6">申请友链</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
@@ -242,7 +242,7 @@ export default function FriendsPageClient({
         <DialogContent onClose={() => setShowVerifyDialog(false)}>
           <div className="text-center">
             <h3 className="text-lg font-medium mb-4">人机验证</h3>
-            <p className="text-sm text-gray-500 mb-4">请完成下方验证后提交友链申请</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">请完成下方验证后提交友链申请</p>
             {turnstileSiteKey && (
               <Turnstile
                 siteKey={turnstileSiteKey}

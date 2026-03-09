@@ -137,7 +137,7 @@ function CommentItem({
   }
 
   return (
-    <div className={`${depth > 0 ? 'ml-8 pl-4 border-l-2 border-gray-200' : ''}`}>
+    <div className={`${depth > 0 ? 'ml-8 pl-4 border-l-2 border-gray-200 dark:border-gray-700' : ''}`}>
       <div className="flex gap-3 py-3">
         <Avatar
           src={comment.author?.avatar_url || ''}
@@ -147,14 +147,14 @@ function CommentItem({
         />
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
-            <span className="font-medium text-gray-900 text-sm">{comment.author?.name || ''}</span>
-            <span className="text-gray-400 text-xs">{formatCommentDate(comment.created_at)}</span>
+            <span className="font-medium text-gray-900 dark:text-gray-100 text-sm">{comment.author?.name || ''}</span>
+            <span className="text-gray-400 dark:text-gray-500 text-xs">{formatCommentDate(comment.created_at)}</span>
           </div>
-          <p className="text-gray-700 whitespace-pre-wrap text-sm">{comment.content}</p>
+          <p className="text-gray-700 dark:text-gray-300 whitespace-pre-wrap text-sm">{comment.content}</p>
           
           <button
             onClick={() => setShowReplyForm(!showReplyForm)}
-            className="text-gray-500 text-xs hover:text-primary-600 mt-2"
+            className="text-gray-500 dark:text-gray-400 text-xs hover:text-primary-600 mt-2"
           >
             回复
           </button>
@@ -168,7 +168,7 @@ function CommentItem({
                     value={replyName}
                     onChange={(e) => setReplyName(e.target.value)}
                     placeholder="昵称 *"
-                    className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-xs"
+                    className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent text-xs"
                     required
                   />
                   <input
@@ -176,7 +176,7 @@ function CommentItem({
                     value={replyEmail}
                     onChange={(e) => setReplyEmail(e.target.value)}
                     placeholder="邮箱 *"
-                    className="px-3 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-xs"
+                    className="px-3 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent text-xs"
                     required
                   />
                 </div>
@@ -361,8 +361,8 @@ export default function CommentSection({ postId, initialComments, currentUser, t
   }
 
   return (
-    <div className="mt-12 bg-white rounded-2xl shadow-sm p-8 mb-8">
-      <h3 className="text-xl font-bold text-gray-900 mb-6">
+    <div className="mt-12 bg-white dark:bg-gray-900 rounded-2xl shadow-sm p-8 mb-8">
+      <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-6">
         评论
       </h3>
 
@@ -391,8 +391,8 @@ export default function CommentSection({ postId, initialComments, currentUser, t
           </div>
         </form>
       ) : (
-        <form onSubmit={handleGuestCommentSubmit} className="mb-8 p-6 bg-gray-50 rounded-xl">
-          <h4 className="text-base font-medium text-gray-900 mb-4">发表评论</h4>
+        <form onSubmit={handleGuestCommentSubmit} className="mb-8 p-6 bg-gray-50 dark:bg-gray-800 rounded-xl">
+          <h4 className="text-base font-medium text-gray-900 dark:text-gray-100 mb-4">发表评论</h4>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
             <div>
               <input
@@ -400,7 +400,7 @@ export default function CommentSection({ postId, initialComments, currentUser, t
                 value={guestName}
                 onChange={(e) => setGuestName(e.target.value)}
                 placeholder="昵称 *"
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+                className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent text-sm"
                 required
               />
             </div>
@@ -410,7 +410,7 @@ export default function CommentSection({ postId, initialComments, currentUser, t
                 value={guestEmail}
                 onChange={(e) => setGuestEmail(e.target.value)}
                 placeholder="邮箱 * (用于生成头像)"
-                className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm"
+                className="w-full px-4 py-2 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 focus:border-transparent text-sm"
                 required
               />
             </div>
@@ -428,7 +428,7 @@ export default function CommentSection({ postId, initialComments, currentUser, t
           <Button type="submit" disabled={submitting}>
             {submitting ? '提交中...' : '发表评论'}
           </Button>
-          <p className="text-gray-400 text-xs mt-2">发表评论即表示同意展示您的头像</p>
+          <p className="text-gray-400 dark:text-gray-500 text-xs mt-2">发表评论即表示同意展示您的头像</p>
         </form>
       )}
 
@@ -436,7 +436,7 @@ export default function CommentSection({ postId, initialComments, currentUser, t
         <DialogContent onClose={() => setShowVerifyDialog(false)}>
           <div className="text-center">
             <h3 className="text-lg font-medium mb-4">人机验证</h3>
-            <p className="text-sm text-gray-500 mb-4">请完成下方验证后提交评论</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">请完成下方验证后提交评论</p>
             {turnstileSiteKey && (
               <Turnstile
                 siteKey={turnstileSiteKey}
@@ -453,7 +453,7 @@ export default function CommentSection({ postId, initialComments, currentUser, t
         </DialogContent>
       </Dialog>
 
-      <div className="divide-y divide-gray-100">
+      <div className="divide-y divide-gray-100 dark:divide-gray-800">
         {comments.length > 0 ? (
           comments.map(comment => (
             <CommentItem
@@ -472,7 +472,7 @@ export default function CommentSection({ postId, initialComments, currentUser, t
             />
           ))
         ) : (
-          <p className="text-gray-500 text-center py-4">暂无评论，快来抢沙发吧！</p>
+          <p className="text-gray-500 dark:text-gray-400 text-center py-4">暂无评论，快来抢沙发吧！</p>
         )}
       </div>
     </div>

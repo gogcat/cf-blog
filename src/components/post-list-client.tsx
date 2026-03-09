@@ -142,12 +142,12 @@ export default function PostListClient({ initialPosts, initialHasMore }: PostLis
   }, [hasMore, loadingMore, page, fetchPosts, searchKeyword])
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
         <Container>
           <div className="py-16 text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">文章归档</h1>
-            <p className="text-gray-600">探索所有文章，按分类浏览</p>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">文章归档</h1>
+            <p className="text-gray-600 dark:text-gray-300">探索所有文章，按分类浏览</p>
           </div>
           <div className="pb-8">
             <SearchBox />
@@ -173,8 +173,8 @@ export default function PostListClient({ initialPosts, initialHasMore }: PostLis
                         )
                       })()}
                       <div>
-                        <h2 className="text-2xl font-bold text-gray-900">{category.name}</h2>
-                        <p className="text-gray-500 text-sm">{category.posts.length} 篇文章</p>
+                        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">{category.name}</h2>
+                        <p className="text-gray-500 dark:text-gray-400 text-sm">{category.posts.length} 篇文章</p>
                       </div>
                     </div>
                     
@@ -187,7 +187,7 @@ export default function PostListClient({ initialPosts, initialHasMore }: PostLis
                         return (
                           <article 
                             key={post.id}
-                            className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300"
+                            className="group bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden hover:shadow-lg transition-all duration-300"
                           >
                             <div className="md:flex">
                               {firstImage && (
@@ -201,21 +201,21 @@ export default function PostListClient({ initialPosts, initialHasMore }: PostLis
                                 </div>
                               )}
                               <div className="flex-1 p-6">
-                                <div className="flex items-center gap-3 text-sm text-gray-500 mb-3">
+                                <div className="flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400 mb-3">
                                   <time dateTime={post.published_at}>
                                     {formatDate(post.published_at)}
                                   </time>
-                                  <span className="w-1 h-1 rounded-full bg-gray-400"></span>
+                                  <span className="w-1 h-1 rounded-full bg-gray-400 dark:bg-gray-600"></span>
                                   <span className="text-primary-600">{post.view_count} 阅读</span>
                                 </div>
                                 
                                 <Link href={postUrl}>
-                                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors line-clamp-1">
+                                  <h3 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-primary-600 transition-colors line-clamp-1">
                                     {post.title}
                                   </h3>
                                 </Link>
                                 
-                                <p className="text-gray-600 mb-4 line-clamp-2 text-sm leading-relaxed">
+                                <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-2 text-sm leading-relaxed">
                                   {excerpt}
                                 </p>
                                 
@@ -235,7 +235,7 @@ export default function PostListClient({ initialPosts, initialHasMore }: PostLis
                                       {post.tags.slice(0, 2).map(tag => (
                                         <span 
                                           key={tag.id}
-                                          className="px-2 py-1 text-xs bg-primary-50 text-primary-600 rounded-full"
+                                          className="px-2 py-1 text-xs bg-primary-50 dark:bg-primary-900/30 text-primary-600 dark:text-primary-400 rounded-full"
                                         >
                                           {tag.name}
                                         </span>
@@ -257,19 +257,19 @@ export default function PostListClient({ initialPosts, initialHasMore }: PostLis
                 {loadingMore && (
                   <div className="flex justify-center items-center gap-3">
                     <div className="w-8 h-8 border-4 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-                    <span className="text-gray-500">加载更多...</span>
+                    <span className="text-gray-500 dark:text-gray-400">加载更多...</span>
                   </div>
                 )}
                 {!hasMore && categoryGroups.length > 0 && (
-                  <p className="text-gray-400">— 已加载全部文章 —</p>
+                  <p className="text-gray-400 dark:text-gray-500">— 已加载全部文章 —</p>
                 )}
               </div>
             </>
           ) : (
             <div className="text-center py-20">
               <div className="text-6xl mb-6">📚</div>
-              <h2 className="text-2xl font-semibold text-gray-900 mb-3">暂无文章</h2>
-              <p className="text-gray-500">敬请期待更多内容...</p>
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-3">暂无文章</h2>
+              <p className="text-gray-500 dark:text-gray-400">敬请期待更多内容...</p>
             </div>
           )}
         </div>

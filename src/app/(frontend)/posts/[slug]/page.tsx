@@ -49,12 +49,12 @@ function renderContent(content: string): string {
   
   html = html.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
   html = html.replace(/\*([^*]+)\*/g, '<em>$1</em>')
-  html = html.replace(/`([^`]+)`/g, '<code class="bg-gray-100 px-1 py-0.5 rounded text-sm">$1</code>')
+  html = html.replace(/`([^`]+)`/g, '<code class="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-sm">$1</code>')
   
   html = html.replace(/^- (.*$)/gm, '<li class="ml-4">$1</li>')
   html = html.replace(/(<li class="ml-4">[\s\S]*?<\/li>)/, '<ul class="my-4">$1</ul>')
   
-  html = html.replace(/^> (.*$)/gm, '<blockquote class="border-l-4 border-primary-500 pl-4 my-4 text-gray-600 italic">$1</blockquote>')
+  html = html.replace(/^> (.*$)/gm, '<blockquote class="border-l-4 border-primary-500 pl-4 my-4 text-gray-600 dark:text-gray-400 italic">$1</blockquote>')
   
   html = html.replace(/\n\n/g, '</p><p class="my-4">')
   html = '<p class="my-4">' + html + '</p>'
@@ -119,7 +119,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ slu
   const firstImage = post.cover_image || extractFirstImage(post.content)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
       {firstImage && (
         <div className="relative h-64 md:h-96 w-full">
           <Image
@@ -135,9 +135,9 @@ export default async function PostDetailPage({ params }: { params: Promise<{ slu
 
       <Container>
         <article className="max-w-3xl mx-auto -mt-8 relative z-10">
-          <div className="bg-white rounded-2xl shadow-sm p-8 md:p-12">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm p-8 md:p-12">
             <header className="mb-8">
-              <div className="flex items-center gap-2 text-sm text-gray-500 mb-4">
+              <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-4">
                 <time dateTime={post.published_at}>
                   {formatDate(post.published_at)}
                 </time>
@@ -145,7 +145,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ slu
                 <ViewCounter slug={slug} initialCount={post.view_count} />
               </div>
               
-              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+              <h1 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">
                 {post.title}
               </h1>
               
@@ -165,13 +165,13 @@ export default async function PostDetailPage({ params }: { params: Promise<{ slu
                         {post.author.name.charAt(0).toUpperCase()}
                       </div>
                     )}
-                    <span className="text-gray-600">{post.author.name}</span>
+                    <span className="text-gray-600 dark:text-gray-300">{post.author.name}</span>
                   </div>
                 )}
                 
                 {post.category && (
                   <>
-                    <span>·</span>
+                    <span className="text-gray-400">·</span>
                     <Link href={`/posts?category=${post.category.slug}`} className="text-primary-600 hover:text-primary-700">
                       {post.category.name}
                     </Link>
@@ -185,7 +185,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ slu
                     <Link
                       key={tag.id}
                       href={`/posts?tag=${tag.slug}`}
-                      className="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded-full hover:bg-gray-200 transition-colors"
+                      className="px-3 py-1 text-sm bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                     >
                       {tag.name}
                     </Link>
@@ -194,18 +194,18 @@ export default async function PostDetailPage({ params }: { params: Promise<{ slu
               )}
             </header>
             
-            <div className="text-gray-700 leading-relaxed space-y-4">
+            <div className="text-gray-700 dark:text-gray-300 leading-relaxed space-y-4">
               <div dangerouslySetInnerHTML={{ __html: renderContent(post.content) }} />
             </div>
 
             {post.tags && post.tags.length > 0 && (
-              <footer className="mt-12 pt-8 border-t border-gray-200">
+              <footer className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex flex-wrap gap-2">
                   {post.tags.map(tag => (
                     <Link
                       key={tag.id}
                       href={`/posts?tag=${tag.slug}`}
-                      className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm hover:bg-gray-200 transition-colors"
+                      className="px-3 py-1 bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 rounded-full text-sm hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                     >
                       {tag.name}
                     </Link>
@@ -216,7 +216,7 @@ export default async function PostDetailPage({ params }: { params: Promise<{ slu
           </div>
         </article>
         
-        <div className="mt-12 max-w-3xl mx-auto bg-white rounded-2xl shadow-sm p-8 mb-8">
+        <div className="mt-12 max-w-3xl mx-auto bg-white dark:bg-gray-900 rounded-2xl shadow-sm p-8 mb-8">
           <CommentSection 
             postId={post.id} 
             initialComments={comments} 

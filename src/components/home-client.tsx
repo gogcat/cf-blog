@@ -77,12 +77,12 @@ export default function HomePageClient({ initialPosts, initialHasMore, siteTitle
   }, [hasMore, loadingMore, page, fetchPosts])
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-800">
+      <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700">
         <Container>
           <div className="py-16 text-center">
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">{siteTitle}</h1>
-            <p className="text-gray-600">{siteSubtitle}</p>
+            <h1 className="text-4xl font-bold text-gray-900 dark:text-gray-100 mb-4">{siteTitle}</h1>
+            <p className="text-gray-600 dark:text-gray-300">{siteSubtitle}</p>
           </div>
         </Container>
       </div>
@@ -90,7 +90,7 @@ export default function HomePageClient({ initialPosts, initialHasMore, siteTitle
       <Container>
         <div className="py-12">
           {error && (
-            <div className="mb-8 p-4 bg-red-50 text-red-600 rounded-lg text-center">
+            <div className="mb-8 p-4 bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 rounded-lg text-center">
               {error}
             </div>
           )}
@@ -106,7 +106,7 @@ export default function HomePageClient({ initialPosts, initialHasMore, siteTitle
                   return (
                     <article 
                       key={post.id} 
-                      className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col"
+                      className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden hover:shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col"
                     >
                       {firstImage && (
                         <Link href={postUrl} className="block relative h-48 overflow-hidden">
@@ -119,7 +119,7 @@ export default function HomePageClient({ initialPosts, initialHasMore, siteTitle
                         </Link>
                       )}
                       <div className="p-6 flex-1 flex flex-col">
-                        <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
+                        <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-3">
                           <time dateTime={post.published_at}>
                             {formatDate(post.published_at)}
                           </time>
@@ -132,23 +132,23 @@ export default function HomePageClient({ initialPosts, initialHasMore, siteTitle
                         </div>
                         
                         <Link href={postUrl} className="block group">
-                          <h2 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">
+                          <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-3 group-hover:text-primary-600 transition-colors line-clamp-2">
                             {post.title}
                           </h2>
                         </Link>
                         
-                        <p className="text-gray-600 mb-4 line-clamp-3 flex-1">
+                        <p className="text-gray-600 dark:text-gray-300 mb-4 line-clamp-3 flex-1">
                           {excerpt}
                         </p>
                         
-                        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                        <div className="flex items-center justify-between pt-4 border-t border-gray-100 dark:border-gray-800">
                           <Link 
                             href={postUrl}
                             className="text-primary-600 font-medium hover:text-primary-700 transition-colors"
                           >
                             阅读全文 →
                           </Link>
-                          <div className="flex items-center gap-1 text-gray-400 text-sm">
+                          <div className="flex items-center gap-1 text-gray-400 dark:text-gray-500 text-sm">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
@@ -166,19 +166,19 @@ export default function HomePageClient({ initialPosts, initialHasMore, siteTitle
                 {loadingMore && (
                   <div className="flex justify-center items-center gap-2">
                     <div className="w-6 h-6 border-3 border-primary-600 border-t-transparent rounded-full animate-spin"></div>
-                    <span className="text-gray-500">加载更多...</span>
+                    <span className="text-gray-500 dark:text-gray-400">加载更多...</span>
                   </div>
                 )}
                 {!hasMore && posts.length > 0 && (
-                  <p className="text-gray-400">没有更多文章了</p>
+                  <p className="text-gray-400 dark:text-gray-500">没有更多文章了</p>
                 )}
               </div>
             </>
           ) : (
             <div className="text-center py-20">
               <div className="text-6xl mb-4">📝</div>
-              <h2 className="text-2xl font-semibold text-gray-900 mb-2">暂无文章</h2>
-              <p className="text-gray-500">敬请期待更多内容...</p>
+              <h2 className="text-2xl font-semibold text-gray-900 dark:text-gray-100 mb-2">暂无文章</h2>
+              <p className="text-gray-500 dark:text-gray-400">敬请期待更多内容...</p>
             </div>
           )}
         </div>

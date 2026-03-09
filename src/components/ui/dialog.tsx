@@ -44,7 +44,7 @@ const DialogContent = ({
         className="fixed inset-0 bg-black/50" 
         onClick={onClose}
       />
-      <div className="relative z-50 bg-white rounded-lg shadow-lg max-w-md w-full mx-4 p-6">
+      <div className="relative z-50 bg-white dark:bg-gray-900 rounded-lg shadow-lg max-w-md w-full mx-4 p-6 text-gray-900 dark:text-gray-100">
         {children}
       </div>
     </div>
