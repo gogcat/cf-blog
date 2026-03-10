@@ -40,6 +40,8 @@ interface SettingsResponse {
 interface ProfileUpdateResponse {
   success: boolean
   error?: string
+  message?: string
+  requireEmailVerification?: boolean
 }
 
 interface UploadResponse {
@@ -136,7 +138,11 @@ export default function AdminSettingsPage() {
       const data = await res.json() as ProfileUpdateResponse
       
       if (data.success) {
-        showToast('保存成功', 'success')
+        if (data.requireEmailVerification) {
+          showToast(data.message || '确认邮件已发送到您的邮箱，请查收', 'success')
+        } else {
+          showToast(data.message || '保存成功', 'success')
+        }
         setProfile(prev => prev ? { ...prev, email: profileForm.email, name: profileForm.name, avatar_url: profileForm.avatar_url } : null)
         setProfileForm(prev => ({ ...prev, currentPassword: '', newPassword: '', confirmPassword: '' }))
       } else {

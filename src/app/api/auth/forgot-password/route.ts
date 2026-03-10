@@ -12,6 +12,15 @@ const forgotPasswordSchema = z.object({
 export async function POST(request: NextRequest): Promise<Response> {
   try {
     const env = getEnv()
+    
+    const emailServiceEnabled = await env.DB.prepare('SELECT value FROM settings WHERE key = ?')
+      .bind('email_enabled')
+      .first<{ value: string }>()
+    
+    if (!emailServiceEnabled || emailServiceEnabled.value !== 'true') {
+      return errorResponse('邮件服务未开启，请联系管理员重置密码', 400, 'EMAIL_SERVICE_DISABLED')
+    }
+    
     const body = await request.json()
     
     const validationResult = forgotPasswordSchema.safeParse(body)

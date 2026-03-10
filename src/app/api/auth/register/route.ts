@@ -19,10 +19,10 @@ export async function POST(request: NextRequest): Promise<Response> {
     
     // 检查邮件服务是否配置
     const emailServiceEnabled = await env.DB.prepare('SELECT value FROM settings WHERE key = ?')
-      .bind('email_service_enabled')
+      .bind('email_enabled')
       .first<{ value: string }>()
     
-    if (emailServiceEnabled?.value !== 'true') {
+    if (!emailServiceEnabled || emailServiceEnabled.value !== 'true') {
       return errorResponse('当前注册未开放，请联系管理员', 503, 'REGISTRATION_CLOSED')
     }
     

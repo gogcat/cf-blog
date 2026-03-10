@@ -1,13 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Container } from '@/components/ui/container'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
 interface SettingsResponse {
   success: boolean
@@ -16,22 +14,17 @@ interface SettingsResponse {
   }
 }
 
-interface RegisterResponse {
+interface ForgotPasswordResponse {
   success: boolean
   error?: string
-  code?: string
-  details?: Record<string, string[]>
+  message?: string
 }
 
-export default function RegisterPage() {
-  const router = useRouter()
+export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [name, setName] = useState('')
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [showErrorDialog, setShowErrorDialog] = useState(false)
-  const [errorDialogMessage, setErrorDialogMessage] = useState('')
   const [emailEnabled, setEmailEnabled] = useState<boolean | null>(null)
 
   useEffect(() => {
@@ -56,27 +49,21 @@ export default function RegisterPage() {
     setLoading(true)
 
     try {
-      const res = await fetch('/api/auth/register', {
+      const res = await fetch('/api/auth/forgot-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, name }),
+        body: JSON.stringify({ email }),
       })
 
-      const data = await res.json() as RegisterResponse
+      const data = await res.json() as ForgotPasswordResponse
 
       if (data.success) {
-        router.push('/')
-        router.refresh()
+        setSuccess(true)
       } else {
-        const errorMsg = data.details 
-          ? Object.values(data.details).flat()[0] || data.error 
-          : data.error || '注册失败'
-        setErrorDialogMessage(errorMsg || '注册失败')
-        setShowErrorDialog(true)
+        setError(data.error || '发送失败')
       }
     } catch {
-      setErrorDialogMessage('注册失败，请稍后重试')
-      setShowErrorDialog(true)
+      setError('发送失败，请稍后重试')
     } finally {
       setLoading(false)
     }
@@ -104,7 +91,7 @@ export default function RegisterPage() {
         <Container className="max-w-md">
           <Card>
             <CardHeader>
-              <CardTitle className="text-center">注册</CardTitle>
+              <CardTitle className="text-center">忘记密码</CardTitle>
             </CardHeader>
             <CardContent className="text-center space-y-4">
               <div className="w-16 h-16 mx-auto bg-yellow-100 dark:bg-yellow-900 rounded-full flex items-center justify-center">
@@ -113,15 +100,47 @@ export default function RegisterPage() {
                 </svg>
               </div>
               <p className="text-gray-600 dark:text-gray-400">
-                注册功能未开放
+                邮件服务未开启
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-500">
-                请联系管理员开通账号
+                请联系管理员重置密码
               </p>
             </CardContent>
             <CardFooter className="justify-center">
-              <Link href="/" className="text-primary-600 hover:underline">
-                返回首页
+              <Link href="/login" className="text-primary-600 hover:underline">
+                返回登录
+              </Link>
+            </CardFooter>
+          </Card>
+        </Container>
+      </div>
+    )
+  }
+
+  if (success) {
+    return (
+      <div className="py-12">
+        <Container className="max-w-md">
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-center">邮件已发送</CardTitle>
+            </CardHeader>
+            <CardContent className="text-center space-y-4">
+              <div className="w-16 h-16 mx-auto bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center">
+                <svg className="w-8 h-8 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
+              </div>
+              <p className="text-gray-600 dark:text-gray-400">
+                如果该邮箱已注册，您将收到密码重置邮件。
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-500">
+                请检查您的收件箱（包括垃圾邮件文件夹）
+              </p>
+            </CardContent>
+            <CardFooter className="justify-center">
+              <Link href="/login" className="text-primary-600 hover:underline">
+                返回登录
               </Link>
             </CardFooter>
           </Card>
@@ -135,7 +154,7 @@ export default function RegisterPage() {
       <Container className="max-w-md">
         <Card>
           <CardHeader>
-            <CardTitle className="text-center">注册</CardTitle>
+            <CardTitle className="text-center">忘记密码</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -144,60 +163,35 @@ export default function RegisterPage() {
                   {error}
                 </div>
               )}
-              <Input
-                label="用户名"
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                required
-                placeholder="请输入用户名"
-              />
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                请输入您的注册邮箱，我们将发送密码重置链接到您的邮箱。
+              </p>
               <Input
                 label="邮箱"
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="请输入邮箱"
-              />
-              <Input
-                label="密码"
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                required
-                placeholder="请输入密码 (至少8位，包含大小写字母和数字)"
+                placeholder="请输入注册邮箱"
               />
               <Button
                 type="submit"
                 className="w-full"
                 disabled={loading}
               >
-                {loading ? '注册中...' : '注册'}
+                {loading ? '发送中...' : '发送重置邮件'}
               </Button>
             </form>
           </CardContent>
           <CardFooter className="justify-center">
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              已有账号？{' '}
+              想起密码了？{' '}
               <Link href="/login" className="text-primary-600 hover:underline">
-                立即登录
+                返回登录
               </Link>
             </p>
           </CardFooter>
         </Card>
-        
-        <Dialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
-          <DialogContent onClose={() => setShowErrorDialog(false)}>
-            <DialogHeader>
-              <DialogTitle>注册失败</DialogTitle>
-            </DialogHeader>
-            <p className="text-gray-600 dark:text-gray-400">{errorDialogMessage}</p>
-            <div className="flex justify-end mt-6">
-              <Button onClick={() => setShowErrorDialog(false)}>知道了</Button>
-            </div>
-          </DialogContent>
-        </Dialog>
       </Container>
     </div>
   )

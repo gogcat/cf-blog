@@ -243,7 +243,6 @@ CREATE INDEX IF NOT EXISTS idx_post_versions_version ON post_versions(post_id, v
 
 -- Add email service settings
 INSERT OR IGNORE INTO settings (id, key, value) VALUES 
-    (lower(hex(randomblob(4))), 'email_service_enabled', 'true'),
     (lower(hex(randomblob(4))), 'resend_api_key', '');
 
 -- Add email change verifications table
