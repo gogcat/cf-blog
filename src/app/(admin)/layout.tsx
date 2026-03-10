@@ -13,6 +13,7 @@ const navItems = [
   { href: '/admin/categories', label: '分类管理', icon: '📁' },
   { href: '/admin/tags', label: '标签管理', icon: '🏷️' },
   { href: '/admin/friend-links', label: '友链管理', icon: '🔗' },
+  { href: '/admin/themes', label: '主题管理', icon: '🎨' },
   { href: '/admin/settings', label: '系统设置', icon: '⚙️' },
 ]
 

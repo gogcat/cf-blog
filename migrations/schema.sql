@@ -1,5 +1,5 @@
 -- CF-blog Database Schema
--- Version: 1.2 (includes friends links table)
+-- Version: 1.1 (includes theme system)
 
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
@@ -156,7 +156,8 @@ INSERT OR IGNORE INTO settings (id, key, value) VALUES
     (lower(hex(randomblob(4))), 'site_subtitle', '分享技术，记录生活'),
     (lower(hex(randomblob(4))), 'site_description', 'A blog built with Next.js'),
     (lower(hex(randomblob(4))), 'site_copyright', '© 2026 My Blog. All rights reserved.'),
-    (lower(hex(randomblob(4))), 'site_favicon', '');
+    (lower(hex(randomblob(4))), 'site_favicon', ''),
+    (lower(hex(randomblob(4))), 'theme', 'default');
 
 -- Friends Links table
 CREATE TABLE IF NOT EXISTS friend_links (
@@ -192,3 +193,19 @@ CREATE TABLE IF NOT EXISTS comment_submissions (
 );
 CREATE INDEX IF NOT EXISTS idx_comment_submissions_ip ON comment_submissions(ip_address);
 CREATE INDEX IF NOT EXISTS idx_comment_submissions_cookie ON comment_submissions(cookie_token);
+
+-- Themes table
+CREATE TABLE IF NOT EXISTS themes (
+    id TEXT PRIMARY KEY,
+    name TEXT NOT NULL,
+    description TEXT,
+    author TEXT,
+    version TEXT,
+    is_default BOOLEAN DEFAULT 0,
+    r2_key TEXT NOT NULL,
+    config_json TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_themes_name ON themes(name);
+CREATE INDEX IF NOT EXISTS idx_themes_author ON themes(author);

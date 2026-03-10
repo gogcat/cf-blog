@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -161,82 +161,94 @@ export default function AdminCategoriesPage() {
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">分类管理</h2>
-        <Button onClick={() => handleOpenDialog()}>新建分类</Button>
-      </div>
+    <div className="space-y-6">
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">分类管理</h2>
+              <p className="text-gray-600 dark:text-gray-300 mt-1">
+                管理博客分类，创建新分类或编辑现有分类
+              </p>
+            </div>
+            <Button onClick={() => handleOpenDialog()}>新建分类</Button>
+          </div>
+        </CardContent>
+      </Card>
 
       {error && (
-        <div className="mb-4 p-3 text-sm text-red-600 bg-red-50 rounded-md">
+        <div className="mb-4 p-3 text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 rounded-md">
           {error}
         </div>
       )}
 
       <Card>
+        <CardHeader>
+          <CardTitle>所有分类</CardTitle>
+        </CardHeader>
         <CardContent className="p-0">
           <div className="overflow-x-auto">
             {loading ? (
-              <div className="text-center py-12 text-gray-500">加载中...</div>
+              <div className="text-center py-12 text-gray-500 dark:text-gray-400">加载中...</div>
             ) : categories.length > 0 ? (
               <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
+                <thead className="bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
                   <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       图标
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       名称
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       Slug
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       描述
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       排序
                     </th>
-                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                       操作
                     </th>
                   </tr>
                 </thead>
-                <tbody className="bg-white divide-y divide-gray-200">
+                <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
                   {categories.map((category) => {
                     const iconData = CATEGORY_ICONS.find(i => i.value === (category.icon || 'folder')) || CATEGORY_ICONS[0]
                     const IconComponent = iconData.icon
                     return (
-                    <tr key={category.id} className="hover:bg-gray-50">
+                    <tr key={category.id} className="hover:bg-gray-50 dark:hover:bg-gray-800">
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${iconData.color} flex items-center justify-center`}>
                           <IconComponent className="w-5 h-5 text-white" />
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-gray-900">{category.name}</div>
+                        <div className="text-sm font-medium text-gray-900 dark:text-gray-100">{category.name}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500">{category.slug}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{category.slug}</div>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="text-sm text-gray-500 max-w-xs truncate">
+                        <div className="text-sm text-gray-500 dark:text-gray-400 max-w-xs truncate">
                           {category.description || '-'}
                         </div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-gray-500">{category.sort_order}</div>
+                        <div className="text-sm text-gray-500 dark:text-gray-400">{category.sort_order}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                         <button 
                           onClick={() => handleOpenDialog(category)}
-                          className="text-primary-600 hover:text-primary-900 mr-4"
+                          className="text-primary-600 hover:text-primary-900 dark:text-primary-400 dark:hover:text-primary-300 mr-4"
                         >
                           编辑
                         </button>
                         <button 
                           onClick={() => handleDelete(category.id)}
-                          className="text-red-600 hover:text-red-900"
+                          className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                         >
                           删除
                         </button>
@@ -247,7 +259,7 @@ export default function AdminCategoriesPage() {
                 </tbody>
               </table>
             ) : (
-              <div className="text-center py-12 text-gray-500">暂无分类</div>
+              <div className="text-center py-12 text-gray-500 dark:text-gray-400">暂无分类</div>
             )}
           </div>
         </CardContent>
@@ -285,42 +297,40 @@ export default function AdminCategoriesPage() {
               </div>
               
               <div>
-                <Label>图标</Label>
-                <div className="mt-2 grid grid-cols-6 gap-2">
-                  {CATEGORY_ICONS.map((item) => {
-                    const IconComponent = item.icon
-                    const isSelected = formData.icon === item.value
-                    return (
-                      <button
-                        key={item.value}
-                        type="button"
-                        onClick={() => setFormData({ ...formData, icon: item.value })}
-                        className={`p-2 rounded-lg flex flex-col items-center gap-1 transition-all ${
-                          isSelected 
-                            ? 'ring-2 ring-primary-500 bg-primary-50' 
-                            : 'hover:bg-gray-100'
-                        }`}
-                      >
-                        <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${item.color} flex items-center justify-center shadow-md`}>
-                          <IconComponent className="w-5 h-5 text-white" />
-                        </div>
-                        <span className="text-xs text-gray-600">{item.label}</span>
-                      </button>
-                    )
-                  })}
-                </div>
-              </div>
-              
-              <div>
-                <Label htmlFor="description">描述</Label>
+                <Label htmlFor="description">描述（可选）</Label>
                 <Textarea
                   id="description"
                   value={formData.description}
                   onChange={e => setFormData({ ...formData, description: e.target.value })}
-                  placeholder="请输入分类描述（可选）"
+                  placeholder="请输入分类描述"
                   className="mt-1"
-                  rows={3}
                 />
+              </div>
+              
+              <div>
+                <Label>图标</Label>
+                <div className="grid grid-cols-6 gap-2 mt-2">
+                  {CATEGORY_ICONS.map((iconData) => {
+                    const IconComponent = iconData.icon
+                    return (
+                      <button
+                        key={iconData.value}
+                        type="button"
+                        onClick={() => setFormData({ ...formData, icon: iconData.value })}
+                        className={`p-2 rounded-lg flex flex-col items-center justify-center transition-colors ${
+                          formData.icon === iconData.value
+                            ? 'ring-2 ring-primary-500 bg-primary-50 dark:bg-primary-900/20'
+                            : 'hover:bg-gray-100 dark:hover:bg-gray-800'
+                        }`}
+                      >
+                        <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${iconData.color} flex items-center justify-center`}>
+                          <IconComponent className="w-4 h-4 text-white" />
+                        </div>
+                        <span className="text-xs mt-1 text-gray-600 dark:text-gray-400">{iconData.label}</span>
+                      </button>
+                    )
+                  })}
+                </div>
               </div>
               
               <div>
@@ -330,6 +340,7 @@ export default function AdminCategoriesPage() {
                   type="number"
                   value={formData.sort_order}
                   onChange={e => setFormData({ ...formData, sort_order: parseInt(e.target.value) || 0 })}
+                  placeholder="0"
                   className="mt-1"
                 />
               </div>

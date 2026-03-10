@@ -216,39 +216,55 @@ export default function AdminSettingsPage() {
 
   if (loading) {
     return (
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">系统设置</h2>
-        <div className="text-center py-12 text-gray-500">加载中...</div>
+      <div className="space-y-6">
+        <Card>
+          <CardContent className="p-6">
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">系统设置</h2>
+            <p className="text-gray-600 dark:text-gray-300 mt-1">
+              管理个人资料和网站基本配置
+            </p>
+          </CardContent>
+        </Card>
+        <div className="text-center py-12 text-gray-500 dark:text-gray-400">加载中...</div>
       </div>
     )
   }
 
   return (
-    <div>
-      <h2 className="text-2xl font-bold text-gray-900 mb-6">系统设置</h2>
-      
-      <div className="flex gap-4 border-b border-gray-200 mb-6">
-        <button
-          onClick={() => setActiveTab('profile')}
-          className={`pb-3 px-1 text-sm font-medium transition-colors ${
-            activeTab === 'profile'
-              ? 'text-primary-600 border-b-2 border-primary-600'
-              : 'text-gray-500 hover:text-gray-700'
-          }`}
-        >
-          个人资料
-        </button>
-        <button
-          onClick={() => setActiveTab('site')}
-          className={`pb-3 px-1 text-sm font-medium transition-colors ${
-            activeTab === 'site'
-              ? 'text-primary-600 border-b-2 border-primary-600'
-              : 'text-gray-500 hover:text-gray-700'
-          }`}
-        >
-          网站设置
-        </button>
-      </div>
+    <div className="space-y-6">
+      <Card>
+        <CardContent className="p-6">
+          <div>
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100">系统设置</h2>
+            <p className="text-gray-600 dark:text-gray-300 mt-1">
+              管理个人资料和网站基本配置
+            </p>
+          </div>
+          
+          <div className="flex gap-4 border-b border-gray-200 dark:border-gray-700 mt-4">
+            <button
+              onClick={() => setActiveTab('profile')}
+              className={`pb-3 px-1 text-sm font-medium transition-colors ${
+                activeTab === 'profile'
+                  ? 'text-primary-600 border-b-2 border-primary-600'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              }`}
+            >
+              个人资料
+            </button>
+            <button
+              onClick={() => setActiveTab('site')}
+              className={`pb-3 px-1 text-sm font-medium transition-colors ${
+                activeTab === 'site'
+                  ? 'text-primary-600 border-b-2 border-primary-600'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              }`}
+            >
+              网站设置
+            </button>
+          </div>
+        </CardContent>
+      </Card>
 
       {activeTab === 'profile' && (
         <Card>
@@ -266,8 +282,8 @@ export default function AdminSettingsPage() {
                     className="w-20 h-20 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-20 h-20 rounded-full bg-primary-100 flex items-center justify-center">
-                    <span className="text-primary-600 text-2xl font-medium">
+                  <div className="w-20 h-20 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
+                    <span className="text-primary-600 dark:text-primary-400 text-2xl font-medium">
                       {(profile?.name || profile?.email || 'A').charAt(0).toUpperCase()}
                     </span>
                   </div>
@@ -290,75 +306,75 @@ export default function AdminSettingsPage() {
                 />
               </div>
               <div>
-                <p className="text-sm text-gray-500">点击图标上传头像</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">点击图标上传头像</p>
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">邮箱</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">邮箱</label>
               <input
                 type="email"
                 value={profileForm.email}
                 onChange={(e) => setProfileForm(prev => ({ ...prev, email: e.target.value }))}
                 placeholder="请输入邮箱"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
-              <p className="text-xs text-red-500 mt-1">邮箱地址是管理员登录账号，谨慎修改，点击保存前请确保输入正确的信息</p>
+              <p className="text-xs text-red-500 dark:text-red-400 mt-1">邮箱地址是管理员登录账号，谨慎修改，点击保存前请确保输入正确的信息</p>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">昵称</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">昵称</label>
               <input
                 type="text"
                 value={profileForm.name}
                 onChange={(e) => setProfileForm(prev => ({ ...prev, name: e.target.value }))}
                 placeholder="请输入昵称"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">头像链接</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">头像链接</label>
               <input
                 type="url"
                 value={profileForm.avatar_url}
                 onChange={(e) => setProfileForm(prev => ({ ...prev, avatar_url: e.target.value }))}
                 placeholder="输入头像图片URL"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
             </div>
 
-            <div className="pt-4 border-t border-gray-200">
-              <h4 className="text-sm font-medium text-gray-900 mb-4">修改密码（可选）</h4>
+            <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+              <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 mb-4">修改密码（可选）</h4>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">当前密码</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">当前密码</label>
                   <input
                     type="password"
                     value={profileForm.currentPassword}
                     onChange={(e) => setProfileForm(prev => ({ ...prev, currentPassword: e.target.value }))}
                     placeholder="请输入当前密码"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">新密码</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">新密码</label>
                   <input
                     type="password"
                     value={profileForm.newPassword}
                     onChange={(e) => setProfileForm(prev => ({ ...prev, newPassword: e.target.value }))}
                     placeholder="请输入新密码"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">确认新密码</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">确认新密码</label>
                   <input
                     type="password"
                     value={profileForm.confirmPassword}
                     onChange={(e) => setProfileForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
                     placeholder="请再次输入新密码"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                   />
                 </div>
               </div>
@@ -384,84 +400,84 @@ export default function AdminSettingsPage() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">网站名称</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">网站名称</label>
               <input
                 type="text"
                 value={siteSettings.site_name}
                 onChange={(e) => setSiteSettings(prev => ({ ...prev, site_name: e.target.value }))}
                 placeholder="请输入网站名称"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">首页标题</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">首页标题</label>
               <input
                 type="text"
                 value={siteSettings.site_title}
                 onChange={(e) => setSiteSettings(prev => ({ ...prev, site_title: e.target.value }))}
                 placeholder="显示在首页的大标题，如：我的博客"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">首页副标题</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">首页副标题</label>
               <input
                 type="text"
                 value={siteSettings.site_subtitle}
                 onChange={(e) => setSiteSettings(prev => ({ ...prev, site_subtitle: e.target.value }))}
                 placeholder="显示在首页标题下方的描述文字"
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">网站描述</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">网站描述</label>
               <textarea
                 value={siteSettings.site_description}
                 onChange={(e) => setSiteSettings(prev => ({ ...prev, site_description: e.target.value }))}
                 placeholder="请输入网站描述"
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">版权信息</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">版权信息</label>
               <input
                 type="text"
                 value={siteSettings.site_copyright}
                 onChange={(e) => setSiteSettings(prev => ({ ...prev, site_copyright: e.target.value }))}
                 placeholder="© 2026 My Blog. All rights reserved."
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
               />
             </div>
-            <div className="pt-6 mt-6 border-t border-gray-200">
-              <h4 className="text-lg font-medium text-gray-900 mb-4">Cloudflare Turnstile 验证</h4>
-              <p className="text-sm text-gray-500 mb-4">用于Blog前台用户交互时人机验证，有效防止垃圾信息或者恶意提交</p>
+            <div className="pt-6 mt-6 border-t border-gray-200 dark:border-gray-700">
+              <h4 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-4">Cloudflare Turnstile 验证</h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">用于Blog前台用户交互时人机验证，有效防止垃圾信息或者恶意提交</p>
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Site Key（前端使用）</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Site Key（前端使用）</label>
                   <input
                     type="text"
                     value={siteSettings.turnstile_site_key}
                     onChange={(e) => setSiteSettings(prev => ({ ...prev, turnstile_site_key: e.target.value }))}
                     placeholder="0x4AAAAAAAxxx"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Secret Key（后端验证）</label>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Secret Key（后端验证）</label>
                   <input
                     type="text"
                     value={siteSettings.turnstile_secret_key}
                     onChange={(e) => setSiteSettings(prev => ({ ...prev, turnstile_secret_key: e.target.value }))}
                     placeholder="0x4AAAAAAAxxx"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+                    className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
                   />
-                  <p className="text-xs text-gray-500 mt-1">请前往 <a href="https://www.cloudflare.com/products/turnstile/" target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline">Cloudflare Turnstile</a> 获取密钥</p>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">请前往 <a href="https://www.cloudflare.com/products/turnstile/" target="_blank" rel="noopener noreferrer" className="text-primary-600 dark:text-primary-400 hover:underline">Cloudflare Turnstile</a> 获取密钥</p>
                 </div>
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">网站图标 (Favicon)</label>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">网站图标 (Favicon)</label>
               <div className="flex items-center gap-4">
                 <div className="relative">
                   {siteSettings.site_favicon ? (
@@ -469,10 +485,10 @@ export default function AdminSettingsPage() {
                     <img
                       src={siteSettings.site_favicon}
                       alt="Favicon"
-                      className="w-12 h-12 rounded-lg object-cover border border-gray-200"
+                      className="w-12 h-12 rounded-lg object-cover border border-gray-200 dark:border-gray-600"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded-lg bg-gray-100 flex items-center justify-center border border-gray-200">
+                    <div className="w-12 h-12 rounded-lg bg-gray-100 dark:bg-gray-700 flex items-center justify-center border border-gray-200 dark:border-gray-600">
                       <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                       </svg>
@@ -496,11 +512,11 @@ export default function AdminSettingsPage() {
                   />
                 </div>
                 <div>
-                  <p className="text-sm text-gray-500">推荐 32x32 或 48x48 的 PNG/SVG 图标</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">推荐 32x32 或 48x48 的 PNG/SVG 图标</p>
                   {siteSettings.site_favicon && (
                     <button
                       onClick={() => setSiteSettings(prev => ({ ...prev, site_favicon: '' }))}
-                      className="text-sm text-red-600 hover:text-red-700"
+                      className="text-sm text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
                     >
                       移除图标
                     </button>

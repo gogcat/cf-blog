@@ -2,6 +2,7 @@
 
 /* eslint-disable @next/next/no-img-element */
 import { useEffect, useState, useRef } from 'react'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useToast } from '@/components/toast'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
@@ -123,40 +124,44 @@ export default function AdminMediaPage() {
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">媒体库</h1>
-        <div>
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handleUpload}
-            className="hidden"
-            id="file-upload"
-          />
-          <label htmlFor="file-upload" className="cursor-pointer">
-            <span className={`inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:pointer-events-none disabled:opacity-50 bg-primary-600 text-white hover:bg-primary-700 h-10 px-4 text-sm ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
-              {uploading ? '上传中...' : '上传文件'}
-            </span>
-          </label>
-        </div>
-      </div>
+    <div className="space-y-6">
+      <Card>
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">媒体库</h1>
+            <div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                onChange={handleUpload}
+                className="hidden"
+                id="file-upload"
+              />
+              <label htmlFor="file-upload" className="cursor-pointer">
+                <span className={`inline-flex items-center justify-center rounded-md font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 disabled:pointer-events-none disabled:opacity-50 bg-primary-600 text-white hover:bg-primary-700 h-10 px-4 text-sm ${uploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
+                  {uploading ? '上传中...' : '上传文件'}
+                </span>
+              </label>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
 
       {error && (
-        <div className="bg-red-50 text-red-600 p-4 rounded-lg mb-4">{error}</div>
+        <div className="bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 p-4 rounded-lg">{error}</div>
       )}
 
       {loading && files.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">加载中...</div>
+        <div className="text-center py-12 text-gray-500 dark:text-gray-400">加载中...</div>
       ) : files.length === 0 ? (
-        <div className="text-center py-12 text-gray-500">暂无媒体文件</div>
+        <div className="text-center py-12 text-gray-500 dark:text-gray-400">暂无媒体文件</div>
       ) : (
         <>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {files.map((file) => (
-              <div key={file.key} className="bg-white rounded-lg border overflow-hidden group">
-                <div className="aspect-square relative bg-gray-100">
+              <div key={file.key} className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden group">
+                <div className="aspect-square relative bg-gray-100 dark:bg-gray-700">
                   <img
                     src={file.publicUrl}
                     alt={file.key}
@@ -168,7 +173,7 @@ export default function AdminMediaPage() {
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
                     <button
                       onClick={() => copyUrl(file.publicUrl)}
-                      className="p-2 bg-white rounded-lg text-sm hover:bg-gray-100"
+                      className="p-2 bg-white dark:bg-gray-700 rounded-lg text-sm hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-900 dark:text-gray-100"
                     >
                       复制
                     </button>
@@ -181,10 +186,10 @@ export default function AdminMediaPage() {
                     </button>
                   </div>
                 </div>
-                <div className="p-2 text-xs text-gray-500 truncate">
+                <div className="p-2 text-xs text-gray-500 dark:text-gray-400 truncate">
                   {file.key.split('/').pop()}
                 </div>
-                <div className="px-2 pb-2 text-xs text-gray-400">
+                <div className="px-2 pb-2 text-xs text-gray-400 dark:text-gray-500">
                   {formatSize(file.size)}
                 </div>
               </div>
@@ -210,13 +215,13 @@ export default function AdminMediaPage() {
           <DialogHeader>
             <DialogTitle>确认删除</DialogTitle>
           </DialogHeader>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-300">
             确定要删除文件 <span className="font-medium">{deleteConfirm?.split('/').pop()}</span> 吗？此操作无法撤销。
           </p>
           <DialogFooter>
             <button
               onClick={() => setDeleteConfirm(null)}
-              className="px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+              className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-900 dark:text-gray-100"
             >
               取消
             </button>
