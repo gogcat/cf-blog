@@ -1,5 +1,5 @@
 -- CF-blog Database Schema
--- Version: 1.1 (includes theme system)
+-- Version: 1.2 (includes theme system, post moderation, and user post management)
 
 -- Users table
 CREATE TABLE IF NOT EXISTS users (
@@ -209,3 +209,64 @@ CREATE TABLE IF NOT EXISTS themes (
 );
 CREATE INDEX IF NOT EXISTS idx_themes_name ON themes(name);
 CREATE INDEX IF NOT EXISTS idx_themes_author ON themes(author);
+
+-- ============================================
+-- Post Moderation and User Post Management (v1.2)
+-- ============================================
+
+-- Add moderation fields to posts table
+ALTER TABLE posts ADD COLUMN moderation_status TEXT DEFAULT 'pending' 
+CHECK(moderation_status IN ('pending', 'approved', 'rejected'));
+
+ALTER TABLE posts ADD COLUMN moderation_note TEXT;
+
+ALTER TABLE posts ADD COLUMN moderated_by TEXT REFERENCES users(id);
+
+ALTER TABLE posts ADD COLUMN moderated_at DATETIME;
+
+-- Create post versions table for version control
+CREATE TABLE IF NOT EXISTS post_versions (
+    id TEXT PRIMARY KEY,
+    post_id TEXT NOT NULL REFERENCES posts(id) ON DELETE CASCADE,
+    title TEXT NOT NULL,
+    content TEXT NOT NULL,
+    excerpt TEXT,
+    cover_image TEXT,
+    category_id TEXT REFERENCES categories(id),
+    tag_ids TEXT,
+    version INTEGER DEFAULT 1,
+    created_by TEXT NOT NULL REFERENCES users(id),
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_post_versions_post ON post_versions(post_id);
+CREATE INDEX IF NOT EXISTS idx_post_versions_version ON post_versions(post_id, version);
+
+-- Add email service settings
+INSERT OR IGNORE INTO settings (id, key, value) VALUES 
+    (lower(hex(randomblob(4))), 'email_service_enabled', 'true'),
+    (lower(hex(randomblob(4))), 'resend_api_key', '');
+
+-- Add email change verifications table
+CREATE TABLE IF NOT EXISTS email_change_verifications (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    old_email TEXT NOT NULL,
+    new_email TEXT NOT NULL,
+    token TEXT UNIQUE NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_email_change_verifications_token ON email_change_verifications(token);
+CREATE INDEX IF NOT EXISTS idx_email_change_verifications_user ON email_change_verifications(user_id);
+
+-- Add password change verifications table
+CREATE TABLE IF NOT EXISTS password_change_verifications (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    new_password_hash TEXT NOT NULL,
+    token TEXT UNIQUE NOT NULL,
+    expires_at DATETIME NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+CREATE INDEX IF NOT EXISTS idx_password_change_verifications_token ON password_change_verifications(token);
+CREATE INDEX IF NOT EXISTS idx_password_change_verifications_user ON password_change_verifications(user_id);

@@ -16,6 +16,16 @@ const registerSchema = z.object({
 export async function POST(request: NextRequest): Promise<Response> {
   try {
     const env = getEnv()
+    
+    // 检查邮件服务是否配置
+    const emailServiceEnabled = await env.DB.prepare('SELECT value FROM settings WHERE key = ?')
+      .bind('email_service_enabled')
+      .first<{ value: string }>()
+    
+    if (emailServiceEnabled?.value !== 'true') {
+      return errorResponse('当前注册未开放，请联系管理员', 503, 'REGISTRATION_CLOSED')
+    }
+    
     const body = await request.json()
     
     const validationResult = registerSchema.safeParse(body)

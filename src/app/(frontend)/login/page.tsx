@@ -56,7 +56,7 @@ export default function LoginPage() {
       <Container className="max-w-md">
         <Card>
           <CardHeader>
-            <CardTitle className="text-center">后台登录</CardTitle>
+            <CardTitle className="text-center">用户登录</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-4">
@@ -88,9 +88,17 @@ export default function LoginPage() {
               >
                 {loading ? '登录中...' : '登录'}
               </Button>
-              <p className="text-xs text-gray-400 text-center">
-                仅用于网站管理员登录
-              </p>
+              <div className="text-center space-y-2">
+                <p className="text-xs text-gray-400">
+                  登录后即可发布文章、管理内容
+                </p>
+                <p className="text-sm">
+                  还没有账号？
+                  <a href="/register" className="text-blue-600 hover:underline ml-1">
+                    立即注册
+                  </a>
+                </p>
+              </div>
             </form>
           </CardContent>
         </Card>

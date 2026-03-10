@@ -7,6 +7,7 @@ import { Container } from '@/components/ui/container'
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -15,10 +16,13 @@ export default function RegisterPage() {
   const [name, setName] = useState('')
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [showErrorDialog, setShowErrorDialog] = useState(false)
+  const [errorDialogMessage, setErrorDialogMessage] = useState('')
 
   interface RegisterResponse {
     success: boolean
     error?: string
+    code?: string
     details?: Record<string, string[]>
   }
 
@@ -40,16 +44,15 @@ export default function RegisterPage() {
         router.push('/')
         router.refresh()
       } else {
-        setError(data.error || '注册失败')
-        if (data.details) {
-          const messages = Object.values(data.details).flat()
-          if (messages.length > 0) {
-            setError(messages[0])
-          }
-        }
+        const errorMsg = data.details 
+          ? Object.values(data.details).flat()[0] || data.error 
+          : data.error || '注册失败'
+        setErrorDialogMessage(errorMsg || '注册失败')
+        setShowErrorDialog(true)
       }
     } catch {
-      setError('注册失败，请稍后重试')
+      setErrorDialogMessage('注册失败，请稍后重试')
+      setShowErrorDialog(true)
     } finally {
       setLoading(false)
     }
@@ -111,6 +114,19 @@ export default function RegisterPage() {
             </p>
           </CardFooter>
         </Card>
+        
+        {/* 错误提示 Dialog */}
+        <Dialog open={showErrorDialog} onOpenChange={setShowErrorDialog}>
+          <DialogContent onClose={() => setShowErrorDialog(false)}>
+            <DialogHeader>
+              <DialogTitle>注册失败</DialogTitle>
+            </DialogHeader>
+            <p className="text-gray-600 dark:text-gray-400">{errorDialogMessage}</p>
+            <div className="flex justify-end mt-6">
+              <Button onClick={() => setShowErrorDialog(false)}>知道了</Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       </Container>
     </div>
   )

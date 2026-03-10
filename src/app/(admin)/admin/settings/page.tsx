@@ -21,6 +21,8 @@ interface SiteSettings {
   site_favicon: string
   turnstile_site_key: string
   turnstile_secret_key: string
+  email_enabled: boolean
+  resend_api_key: string
 }
 
 interface AuthResponse {
@@ -47,7 +49,7 @@ interface UploadResponse {
 }
 
 export default function AdminSettingsPage() {
-  const [activeTab, setActiveTab] = useState<'profile' | 'site'>('profile')
+  const [activeTab, setActiveTab] = useState<'profile' | 'site' | 'email'>('profile')
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const { showToast } = useToast()
@@ -71,6 +73,8 @@ export default function AdminSettingsPage() {
     site_favicon: '',
     turnstile_site_key: '',
     turnstile_secret_key: '',
+    email_enabled: false,
+    resend_api_key: '',
   })
   
   const fileInputRef = useRef<HTMLInputElement>(null)
@@ -101,6 +105,8 @@ export default function AdminSettingsPage() {
             site_favicon: settingsRes.data.settings.site_favicon || '',
             turnstile_site_key: settingsRes.data.settings.turnstile_site_key || '',
             turnstile_secret_key: settingsRes.data.settings.turnstile_secret_key || '',
+            email_enabled: settingsRes.data.settings.email_enabled === 'true',
+            resend_api_key: settingsRes.data.settings.resend_api_key || '',
           })
         }
       })
@@ -261,6 +267,16 @@ export default function AdminSettingsPage() {
               }`}
             >
               网站设置
+            </button>
+            <button
+              onClick={() => setActiveTab('email')}
+              className={`pb-3 px-1 text-sm font-medium transition-colors ${
+                activeTab === 'email'
+                  ? 'text-primary-600 border-b-2 border-primary-600'
+                  : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
+              }`}
+            >
+              邮件服务
             </button>
           </div>
         </CardContent>
@@ -535,6 +551,57 @@ export default function AdminSettingsPage() {
                   await handleSiteSettingsSave('site_favicon', siteSettings.site_favicon)
                   await handleSiteSettingsSave('turnstile_site_key', siteSettings.turnstile_site_key)
                   await handleSiteSettingsSave('turnstile_secret_key', siteSettings.turnstile_secret_key)
+                }}
+                disabled={saving}
+                className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50"
+              >
+                {saving ? '保存中...' : '保存'}
+              </button>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {activeTab === 'email' && (
+        <Card>
+          <CardHeader>
+            <CardTitle>邮件服务</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">启用邮件服务</label>
+              <div className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  id="email_enabled"
+                  checked={siteSettings.email_enabled}
+                  onChange={(e) => setSiteSettings(prev => ({ ...prev, email_enabled: e.target.checked }))}
+                  className="w-4 h-4 text-primary-600 border-gray-300 rounded focus:ring-primary-500"
+                />
+                <label htmlFor="email_enabled" className="text-sm text-gray-700 dark:text-gray-300">
+                  启用邮件验证功能
+                </label>
+              </div>
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                启用后，用户在修改邮箱或密码时会收到验证邮件
+              </p>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Resend API Key</label>
+              <input
+                type="password"
+                value={siteSettings.resend_api_key}
+                onChange={(e) => setSiteSettings(prev => ({ ...prev, resend_api_key: e.target.value }))}
+                placeholder="re_xxxxxxxxxxxx"
+                className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100"
+              />
+              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">请前往 <a href="https://resend.com/api-keys" target="_blank" rel="noopener noreferrer" className="text-primary-600 dark:text-primary-400 hover:underline">Resend</a> 获取 API Key</p>
+            </div>
+            <div className="flex justify-end pt-4">
+              <button
+                onClick={async () => {
+                  await handleSiteSettingsSave('email_enabled', siteSettings.email_enabled.toString())
+                  await handleSiteSettingsSave('resend_api_key', siteSettings.resend_api_key)
                 }}
                 disabled={saving}
                 className="px-4 py-2 bg-primary-600 text-white rounded-md hover:bg-primary-700 disabled:opacity-50"

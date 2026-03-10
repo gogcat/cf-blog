@@ -52,6 +52,8 @@ export async function GET(request: NextRequest): Promise<Response> {
       whereClause += " AND p.status = 'published'"
     }
     
+    whereClause += " AND p.moderation_status = 'approved'"
+    
     if (category) {
       whereClause += ' AND c.slug = ?'
       params.push(category)

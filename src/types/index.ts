@@ -8,6 +8,10 @@ export interface Post {
   author_id: string
   category_id: string | null
   status: string
+  moderation_status: string
+  moderation_note: string | null
+  moderated_by: string | null
+  moderated_at: string | null
   view_count: number
   published_at: string
   created_at: string
